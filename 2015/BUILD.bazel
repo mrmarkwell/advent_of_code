@@ -1,0 +1,9 @@
+cc_binary(
+    name = "day1",
+    deps = [
+        "@abseil-cpp//absl/strings",
+        "//advent_of_code/utils:utils",
+    ],
+    srcs = ["day1.cc"],
+    data = ["day1.txt"],
+)
