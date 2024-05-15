@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "absl/strings/str_join.h"
-#include "advent_of_code/utils/utils.h"
+#include "utils/utils.h"
 
 struct FloorInfo {
   int final_floor = 0;
@@ -29,7 +29,7 @@ FloorInfo CountFloors(std::string_view input) {
 }
 
 int main() {
-  std::string input = ReadFileToString("./advent_of_code/2015/day1.txt");
+  std::string input = ReadFileToString("./2015/day1.txt");
   std::vector<std::string> v = {"foo", "bar", "baz"};
   std::string s = absl::StrJoin(v, "-");
 
