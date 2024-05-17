@@ -21,10 +21,6 @@ at his starting/ending location.
 - ^v^v^v^v^v delivers a bunch of presents to some very lucky children at only 2
 houses.
 
-Your puzzle answer was 2565.
-
-The first half of this puzzle is complete! It provides one gold star: *
-
 --- Part Two ---
 The next year, to speed up the process, Santa creates a robot version of
 himself, Robo-Santa, to deliver presents with him.
@@ -43,8 +39,6 @@ Robo-Santa goes south.
 where they started.
 - ^v^v^v^v^v now delivers presents to 11 houses, with Santa going one direction
 and Robo-Santa going the other.
-
-
 */
 
 #include "absl/container/flat_hash_set.h"
