@@ -17,6 +17,14 @@ number to do so.
 - If your secret key is pqrstuv, the lowest number it combines with to make an
 MD5 hash starting with five zeroes is 1048970; that is, the MD5 hash of
 pqrstuv1048970 looks like 000006136ef.... Your puzzle input is iwrupvqb.
+
+Your puzzle answer was 346386.
+
+The first half of this puzzle is complete! It provides one gold star: *
+
+--- Part Two ---
+Now find one that starts with six zeroes.
+
 */
 
 #include <openssl/md5.h>  // This is provided by BoringSSL
