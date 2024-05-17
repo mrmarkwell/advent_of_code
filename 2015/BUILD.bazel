@@ -37,3 +37,11 @@ cc_binary(
     ],
     srcs = ["day4.cc"],
 )
+
+cc_binary(
+    name = "day5",
+    deps = [
+        "//utils:utils"
+    ],
+    srcs = ["day5.cc"],
+)
