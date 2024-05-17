@@ -52,6 +52,7 @@ For example:
 
 
 */
+#include <cassert>
 #include <iostream>
 #include <numeric>
 #include <regex>
