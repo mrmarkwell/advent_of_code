@@ -21,6 +21,7 @@ pqrstuv1048970 looks like 000006136ef.... Your puzzle input is iwrupvqb.
 
 #include <openssl/md5.h>  // This is provided by BoringSSL
 
+#include <cassert>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -49,22 +50,34 @@ std::string ComputeMd5(const std::string& str) {
   return oss.str();
 }
 
+int FindAdventCoin(std::string secret_key, int num_of_zeroes) {
+  for (int i = 1;; ++i) {
+    bool valid_coin = true;
+    std::string hash = ComputeMd5(secret_key + std::to_string(i));
+    for (int j = 0; j < num_of_zeroes; j++) {
+      if (hash[j] != '0') {
+        valid_coin = false;
+      }
+    }
+    if (valid_coin) {
+      return i;
+    }
+  }
+}
+
 int main() {
-  std::string key = "iwrupvqb";
+  std::string key = "yzbqklnj";
+  int num_starting_zeroes = 5;
 
   // Go ahead and reserve space for appending numeric values.
   key.reserve(20);
 
-  for (int i = 0;; ++i) {
-    (void)i;
-    break;
-  }
+  assert(FindAdventCoin("abcdef", num_starting_zeroes) == 609043);
+  assert(FindAdventCoin("pqrstuv", num_starting_zeroes) == 1048970);
 
-  std::cout << "MD5: " << ComputeMd5("abcdef6090431") << "\n";
-  std::cout << "MD5: " << ComputeMd5("iwrupvqb1") << "\n";
-  std::cout << "MD5: " << ComputeMd5("iwrupvqb2") << "\n";
-  std::cout << "MD5: " << ComputeMd5("iwrupvqb3") << "\n";
-  std::cout << "MD5: " << ComputeMd5("iwrupvqb4") << "\n";
+  std::cout << "5 zeroes: " << FindAdventCoin(key, num_starting_zeroes) << "\n";
+  num_starting_zeroes = 6;
+  std::cout << "6 zeroes: " << FindAdventCoin(key, num_starting_zeroes) << "\n";
 
   return 0;
 }
