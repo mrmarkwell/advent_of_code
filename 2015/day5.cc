@@ -59,7 +59,7 @@ int NumOfBetterNiceStrings(std::vector<std::string> inputs) {
         }
       }
 
-      if (i + 2 < input.length()) {
+      if (i + 2 < input.length() && !has_repeat) {
         if (input[i + 2] == input[i]) {
           has_repeat = true;
         }
