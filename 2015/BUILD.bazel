@@ -1,7 +1,6 @@
 cc_binary(
     name = "day1",
     deps = [
-        "@abseil-cpp//absl/strings",
         "//utils:utils",
     ],
     srcs = ["day1.cc"],
@@ -11,7 +10,6 @@ cc_binary(
 cc_binary(
     name = "day2",
     deps = [
-        "@abseil-cpp//absl/strings",
         "//utils:utils",
     ],
     srcs = ["day2.cc"],
@@ -47,3 +45,11 @@ cc_binary(
     data = ["day5.txt"],
 )
 
+cc_binary(
+    name = "day6",
+    deps = [
+        "//utils:utils",
+    ],
+    srcs = ["day6.cc"],
+    data = ["day6.txt"],
+)

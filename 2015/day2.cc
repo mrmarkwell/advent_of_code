@@ -79,7 +79,7 @@ Present ParsePresent(const std::string& str, char delimiter) {
 
 std::vector<Present> ParseInputFile() {
   // Create an input string stream from the string
-  std::istringstream stream{ReadFileToString("./2015/day2.txt")};
+  std::istringstream stream{aoc::ReadFileToString("./2015/day2.txt")};
 
   std::vector<Present> presents;
 

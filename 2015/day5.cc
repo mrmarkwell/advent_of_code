@@ -99,9 +99,9 @@ int NumOfBetterNiceStrings(std::vector<std::string> inputs) {
         std::string substr = input.substr(i, 2);
         auto it = pair_starting_positions.find(substr);
         if (it != pair_starting_positions.end()) {
-            if (i - it->second > 1) {
-              has_separate_doubles = true;
-            }
+          if (i - it->second > 1) {
+            has_separate_doubles = true;
+          }
         } else {
           pair_starting_positions.insert(
               std::pair<std::string, int>(substr, {i}));
@@ -124,7 +124,7 @@ int NumOfBetterNiceStrings(std::vector<std::string> inputs) {
 
 int main() {
   std::vector<std::string> inputs =
-      LoadStringsFromFileByLine("./2015/day5.txt");
+      aoc::LoadStringsFromFileByLine("./2015/day5.txt");
 
   assert(NumOfNiceStrings({"ugknbfddgicrmopn"}) == 1);
   assert(NumOfNiceStrings({"aaa"}) == 1);

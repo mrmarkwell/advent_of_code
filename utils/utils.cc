@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+namespace aoc {
+
 std::string ReadFileToString(const std::string& file_path) {
   std::ifstream file_stream(file_path, std::ios::in | std::ios::binary);
   assert(file_stream && "Could not open file");
@@ -32,3 +34,5 @@ std::vector<std::string> LoadStringsFromFileByLine(
   }
   return str_vector;
 }
+
+}  // namespace aoc

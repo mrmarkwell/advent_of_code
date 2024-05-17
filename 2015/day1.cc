@@ -74,7 +74,7 @@ FloorInfo CountFloors(std::string_view input) {
 }
 
 int main() {
-  std::string input = ReadFileToString("./2015/day1.txt");
+  std::string input = aoc::ReadFileToString("./2015/day1.txt");
   std::vector<std::string> v = {"foo", "bar", "baz"};
   std::string s = absl::StrJoin(v, "-");
 

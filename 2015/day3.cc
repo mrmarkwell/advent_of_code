@@ -134,7 +134,7 @@ absl::flat_hash_set<Coordinate, CoordinateHash> ComputeVisitedHouseSetWithRobo(
 }
 
 int main() {
-  std::string input = ReadFileToString("./2015/day3.txt");
+  std::string input = aoc::ReadFileToString("./2015/day3.txt");
 
   assert(ComputeVisitedHouseSet("^").size() == 2);
   assert(ComputeVisitedHouseSet("^>v<").size() == 4);
