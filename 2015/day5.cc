@@ -73,7 +73,7 @@ int NumOfNiceStrings(std::vector<std::string> inputs) {
 int NumOfBetterNiceStrings(std::vector<std::string> inputs) {
   int nice_count = 0;
   for (const auto& input : inputs) {
-    std::unordered_map<std::string, std::vector<int>> pair_starting_positions;
+    std::unordered_map<std::string, int> pair_starting_positions;
     bool has_separate_doubles = false;
     bool has_repeat = false;
     for (int i = 0; i < input.length(); i++) {
@@ -81,14 +81,12 @@ int NumOfBetterNiceStrings(std::vector<std::string> inputs) {
         std::string substr = input.substr(i, 2);
         auto it = pair_starting_positions.find(substr);
         if (it != pair_starting_positions.end()) {
-          for (const auto& value : it->second) {
-            if (i - value > 1) {
+            if (i - it->second > 1) {
               has_separate_doubles = true;
             }
-          }
         } else {
           pair_starting_positions.insert(
-              std::pair<std::string, std::vector<int>>(substr, {i}));
+              std::pair<std::string, int>(substr, {i}));
         }
       }
 
