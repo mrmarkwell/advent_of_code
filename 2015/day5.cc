@@ -65,9 +65,7 @@ int NumOfBetterNiceStrings(std::vector<std::string> inputs) {
         }
       }
       if (has_repeat && has_separate_doubles) {
-        std::cout << input << ": ";
         nice_count++;
-        std::cout << nice_count << "\n";
         break;
       }
     }
@@ -77,7 +75,7 @@ int NumOfBetterNiceStrings(std::vector<std::string> inputs) {
 
 int main() {
   std::vector<std::string> inputs =
-      LoadStringsFromFile("./../../../../../../2015/day5.txt");
+      LoadStringsFromFileByLine("./../../../../../../2015/day5.txt");
 
   assert(NumOfNiceStrings({"ugknbfddgicrmopn"}) == 1);
   assert(NumOfNiceStrings({"aaa"}) == 1);

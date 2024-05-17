@@ -15,7 +15,7 @@ std::string ReadFileToString(const std::string& file_path) {
   return buffer.str();
 }
 
-std::vector<std::string> LoadStringsFromFile(const std::string& file_path) {
+std::vector<std::string> LoadStringsFromFileByLine(const std::string& file_path) {
   std::vector<std::string> str_vector = {};
   std::ifstream file;
   file.open(file_path, std::ios::in);
