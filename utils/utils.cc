@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 std::string ReadFileToString(const std::string& file_path) {
   std::ifstream file_stream(file_path, std::ios::in | std::ios::binary);
@@ -15,7 +16,8 @@ std::string ReadFileToString(const std::string& file_path) {
   return buffer.str();
 }
 
-std::vector<std::string> LoadStringsFromFileByLine(const std::string& file_path) {
+std::vector<std::string> LoadStringsFromFileByLine(
+    const std::string& file_path) {
   std::vector<std::string> str_vector = {};
   std::ifstream file;
   file.open(file_path, std::ios::in);
