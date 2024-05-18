@@ -29,7 +29,6 @@ cc_binary(
 cc_binary(
     name = "day4",
     deps = [
-        "@abseil-cpp//absl/container:flat_hash_set",
         "@boringssl//:crypto",
         "//utils:utils",
     ],
@@ -52,4 +51,13 @@ cc_binary(
     ],
     srcs = ["day6.cc"],
     data = ["day6.txt"],
+)
+cc_binary(
+    name = "day7alternate",
+    deps = [
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "//utils:utils",
+    ],
+    srcs = ["day7alternate.cc"],
+    data = ["day7alternate.txt"],
 )
