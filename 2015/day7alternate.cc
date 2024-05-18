@@ -47,6 +47,11 @@ x: 123
 y: 456
 In little Bobby's kit's instructions booklet (provided as your puzzle input),
 what signal is ultimately provided to wire a?
+
+--- Part Two ---
+Now, take the signal you got on wire a, override wire b to that signal, and
+reset the other wires (including wire a). What new signal is ultimately provided
+to wire a?
 */
 
 #include <optional>
@@ -278,6 +283,31 @@ int main() {
     }
   }
   std::cout << "Wire a: " << wires["a"] << std::endl;
+
+  // If a wire has a known value, it is recorded here.
+  absl::flat_hash_map<std::string, uint16_t> part_two_wires;
+
+  // Mark the wire b with the value from a.
+  part_two_wires["b"] = wires["a"];
+
+  std::for_each(instructions.begin(), instructions.end(),
+                [](Instruction& instruction) {
+                  // Reset every instruction except the one that assigns b.
+                  if (instruction.destination != "b") {
+                    instruction.executed = false;
+                  }
+                });
+
+  // Repeat until all instructions are executed.
+  while (!std::all_of(
+      instructions.begin(), instructions.end(),
+      [](const Instruction& instruction) { return instruction.executed; })) {
+    // Try to execute each instruction.
+    for (Instruction& instruction : instructions) {
+      TryExecute(instruction, part_two_wires);
+    }
+  }
+  std::cout << "Part 2 wire a: " << part_two_wires["a"] << std::endl;
 
   return 0;
 }
