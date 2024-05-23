@@ -184,6 +184,11 @@ class Graph {
       }
     }
   }
+  Node& FindNode(std::string node_name) {
+    return *std::find_if(
+        nodes.begin(), nodes.end(),
+        [node_name](const Node& node) { return node.name == node_name; });
+  }
 };
 
 Graph BuildGraph(const std::string& input) {
@@ -223,21 +228,14 @@ int main() {
   for (auto& name : build_order) {
     graph.ComputeNode(name);
   }
-  // std ::cout << "\n\n\n\n\n\n\n\n\n\n\n";
-  // for (auto i : graph.nodes) {
-  //   std::cout << i.name << ": " << i.value << std::endl;
-  // }
 
-  Node& nodeA =
-      *std::find_if(graph.nodes.begin(), graph.nodes.end(),
-                    [](const Node& node) { return node.name == "a"; });
+  Node& nodeA = graph.FindNode("a");
+  Node& nodeB = graph.FindNode("b");
 
   std::cout << "A node: " << nodeA.value << std::endl;
 
+  // PART 2
   build_order.erase(build_order.begin());
-  Node& nodeB =
-      *std::find_if(graph.nodes.begin(), graph.nodes.end(),
-                    [](const Node& node) { return node.name == "b"; });
 
   nodeB.value = nodeA.value;
 
