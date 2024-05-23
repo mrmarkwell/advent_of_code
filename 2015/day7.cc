@@ -82,7 +82,6 @@ class Graph {
         *std::find_if(nodes.begin(), nodes.end(),
                       [to](const Node& node) { return node.name == to; });
 
-    // std::cout << "Adding edge from " << from << " to " << to << "\n";
     from_node.neighbors.push_back(&to_node);
   }
 
@@ -184,7 +183,6 @@ class Graph {
         node->value = std::stoi(match[0]);
       }
     }
-    // std::cout << node->name << ": " << node->value << std::endl;
   }
 };
 
