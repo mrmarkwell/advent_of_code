@@ -98,28 +98,27 @@ std::unordered_map<std::string, int> BuildStringMap(
 }
 
 int MinPath(const std::vector<std::vector<int>>& graph, int s) {
-  int V = graph.size();  // calculate number of vertices
+  int V = graph.size();  // calculate number of vertices.
 
-  // store all vertices apart from the source vertex
+  // Store all vertices apart from the source vertex.
   std::vector<int> vertex;
   for (int i = 0; i < V; i++)
     if (i != s) vertex.push_back(i);
 
-  // store minimum weight Hamiltonian Path (no need to return to source)
+  // Set starting path weight to INT_MAX.
   int min_path = INT_MAX;
 
   do {
-    // store current path weight (cost)
     int current_pathweight = 0;
 
-    // compute current path weight
+    // Compute current path weight.
     int k = s;
     for (int i = 0; i < vertex.size(); i++) {
       current_pathweight += graph[k][vertex[i]];
       k = vertex[i];
     }
 
-    // Update the minimum path cost
+    // Update the minimum path cost.
     min_path = std::min(min_path, current_pathweight);
 
   } while (std::next_permutation(vertex.begin(), vertex.end()));
@@ -128,28 +127,27 @@ int MinPath(const std::vector<std::vector<int>>& graph, int s) {
 }
 
 int MaxPath(const std::vector<std::vector<int>>& graph, int s) {
-  int V = graph.size();  // calculate number of vertices
+  int V = graph.size();  // calculate number of vertices.
 
-  // store all vertices apart from the source vertex
+  // Store all vertices apart from the source vertex.
   std::vector<int> vertex;
   for (int i = 0; i < V; i++)
     if (i != s) vertex.push_back(i);
 
-  // store minimum weight Hamiltonian Path (no need to return to source)
+  // Set starting path weight to INT_MIN.
   int max_path = INT_MIN;
 
   do {
-    // store current path weight (cost)
     int current_pathweight = 0;
 
-    // compute current path weight
+    // Compute current path weight.
     int k = s;
     for (int i = 0; i < vertex.size(); i++) {
       current_pathweight += graph[k][vertex[i]];
       k = vertex[i];
     }
 
-    // Update the maximum path cost
+    // Update the maximum path cost.
     max_path = std::max(max_path, current_pathweight);
 
   } while (std::next_permutation(vertex.begin(), vertex.end()));
