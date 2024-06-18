@@ -86,3 +86,8 @@ cc_binary(
     srcs = ["day9.cc"],
     data = ["day9.txt"],
 )
+
+cc_binary(
+    name = "day10",
+    srcs = ["day10.cc"],
+)
