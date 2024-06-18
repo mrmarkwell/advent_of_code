@@ -59,17 +59,11 @@ string GetNextSequence(const string& current_sequence) {
       count = 1;
     }
   }
+  // Adds the final part of the sequence.
   new_sequence.append(to_string(count));
   new_sequence.push_back(previous_char);
 
   return new_sequence;
-}
-
-void CopyToClipboard(const std::string& text) {
-  // Create the command string
-  std::string command = "echo \"" + text + "\" | pbcopy";
-  // Execute the command
-  system(command.c_str());
 }
 
 int main() {
