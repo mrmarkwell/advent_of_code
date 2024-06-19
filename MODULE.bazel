@@ -10,6 +10,8 @@ bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
 
 bazel_dep(name = "boringssl", version = "0.0.0-20240530-2db0eb3")
 
+bazel_dep(name = "nlohmann_json", version = "3.11.3")
+
 git_override(
     module_name = "hedron_compile_commands",
     remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
