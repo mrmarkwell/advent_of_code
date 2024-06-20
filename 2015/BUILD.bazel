@@ -106,3 +106,12 @@ cc_binary(
         "@nlohmann_json//:json",
     ],
 )
+
+cc_binary(
+    name = "day13",
+    deps = [
+        "//utils:utils",
+    ],
+    srcs = ["day13.cc"],
+    data = ["day13.txt"],
+)
