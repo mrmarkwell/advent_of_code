@@ -127,9 +127,24 @@ void PrettyPrint(const std::vector<int>& vec) {
 
 int ComputeHappiness(const std::vector<int>& table,
                      const std::vector<std::vector<int>>& matrix) {
-  PrettyPrint(table);
-  // TODO: make this work.
-  return 5;
+  // PrettyPrint(table);
+  int happiness = 0;
+  for (int person_idx = 0; person_idx < table.size(); ++person_idx) {
+    // For each person, add the happiness from their left & right table partner.
+    int left_idx = person_idx - 1;
+    int right_idx = person_idx + 1;
+    // handle rollover.
+    if (left_idx < 0) {
+      left_idx += table.size();
+    }
+    right_idx %= table.size();
+    int left_neighbor = table[left_idx];
+    int right_neighbor = table[right_idx];
+    int person = table[person_idx];
+    happiness += matrix[person][left_neighbor];
+    happiness += matrix[person][right_neighbor];
+  }
+  return happiness;
 }
 
 bool AlreadyAtTable(const std::vector<int>& table,
@@ -167,7 +182,7 @@ int main() {
 
   std::vector<std::vector<int>> matrix = BuildMatrix(lines);
 
-  PrettyPrint(matrix);
+  // PrettyPrint(matrix);
 
   std::vector<int> table(matrix.size());
 
