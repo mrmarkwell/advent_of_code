@@ -55,6 +55,7 @@ literal. For example, for the strings above, the total encoded length (6 + 9 +
 like in the first part of this puzzle) is 42 - 23 = 19.
 
 */
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <ostream>

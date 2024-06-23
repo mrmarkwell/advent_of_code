@@ -57,6 +57,7 @@ what signal is ultimately provided to wire a?
 #include <regex>
 #include <stack>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "utils/utils.h"
