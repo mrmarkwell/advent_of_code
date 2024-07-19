@@ -117,17 +117,17 @@ void PrettyPrint(const std::vector<std::vector<int>>& matrix) {
   }
 }
 
-void PrettyPrint(const std::vector<int>& vec) {
+void PrettyPrint(const std::vector<int>& vec, int happiness) {
   std::cout << "[ ";
   for (const auto& elem : vec) {
     std::cout << elem << " ";
   }
-  std::cout << "]" << std::endl;
+  std::cout << "] -> " << happiness << std::endl;
 }
 
 int ComputeHappiness(const std::vector<int>& table,
-                     const std::vector<std::vector<int>>& matrix) {
-  // PrettyPrint(table);
+                     const std::vector<std::vector<int>>& matrix,
+                     bool print = false) {
   int happiness = 0;
   for (int person_idx = 0; person_idx < table.size(); ++person_idx) {
     // For each person, add the happiness from their left & right table partner.
@@ -143,7 +143,12 @@ int ComputeHappiness(const std::vector<int>& table,
     int person = table[person_idx];
     happiness += matrix[person][left_neighbor];
     happiness += matrix[person][right_neighbor];
+    if (print)
+      std::cout << "Person: " << person
+                << " Left: " << matrix[person][left_neighbor]
+                << " Right: " << matrix[person][right_neighbor] << "\n";
   }
+  // PrettyPrint(table, happiness);
   return happiness;
 }
 
@@ -160,6 +165,7 @@ void FindMaxHappiness(const std::vector<std::vector<int>>& matrix,
                       std::vector<int>& table, int current_position,
                       int& happiness) {
   if (current_position == table.size()) {
+    int old_happiness = happiness;
     happiness = std::max(happiness, ComputeHappiness(table, matrix));
 
     // Done with this branch.
@@ -194,6 +200,23 @@ int main() {
   // Starting position is 1, since we force person 0 to seat 0.
   constexpr int kStartingPosition = 1;
   FindMaxHappiness(matrix, table, kStartingPosition, happiness);
+
+  // Update the matrix to include the neutral person.
+  // Add a row of zeroes.
+  matrix.push_back(std::vector<int>(matrix.front().size(), 0));
+  // add a column of zeroes.
+  std::for_each(matrix.begin(), matrix.end(),
+                [](auto& row) { row.push_back(0); });
+  // Add a seat at the table.
+  table.push_back(0);
+  int new_happiness = 0;
+  FindMaxHappiness(matrix, table, kStartingPosition, new_happiness);
+
   std::cout << "Max happiness: " << happiness << std::endl;
+
+  // PrettyPrint(matrix);
+
+  std::cout << "New max happiness: " << new_happiness << std::endl;
+
   return 0;
 }
