@@ -165,7 +165,6 @@ void FindMaxHappiness(const std::vector<std::vector<int>>& matrix,
                       std::vector<int>& table, int current_position,
                       int& happiness) {
   if (current_position == table.size()) {
-    int old_happiness = happiness;
     happiness = std::max(happiness, ComputeHappiness(table, matrix));
 
     // Done with this branch.
