@@ -1,90 +1,97 @@
 cc_binary(
     name = "day1",
-    deps = [
-        "//utils:utils",
-    ],
     srcs = ["day1.cc"],
     data = ["day1.txt"],
+    deps = [
+        "//utils",
+    ],
 )
 
 cc_binary(
     name = "day2",
-    deps = [
-        "//utils:utils",
-    ],
     srcs = ["day2.cc"],
     data = ["day2.txt"],
+    deps = [
+        "//utils",
+    ],
 )
 
 cc_binary(
     name = "day3",
-    deps = [
-        "@abseil-cpp//absl/container:flat_hash_set",
-        "//utils:utils",
-    ],
     srcs = ["day3.cc"],
     data = ["day3.txt"],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/container:flat_hash_set",
+    ],
 )
 
 cc_binary(
     name = "day4",
-    deps = [
-        "@boringssl//:crypto",
-        "//utils:utils",
-    ],
     srcs = ["day4.cc"],
+    deps = [
+        "//utils",
+        "@boringssl//:crypto",
+    ],
 )
 
 cc_binary(
     name = "day5",
-    deps = [
-        "//utils:utils",
-    ],
     srcs = ["day5.cc"],
     data = ["day5.txt"],
+    deps = [
+        "//utils",
+    ],
 )
 
 cc_binary(
     name = "day6",
-    deps = [
-        "//utils:utils",
-    ],
     srcs = ["day6.cc"],
     data = ["day6.txt"],
+    deps = [
+        "//utils",
+    ],
 )
+
 cc_binary(
     name = "day7",
-    deps = [
-        "@abseil-cpp//absl/container:flat_hash_map",
-        "//utils:utils",
-    ],
     srcs = ["day7.cc"],
     data = ["day7.txt"],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/container:flat_hash_map",
+    ],
 )
+
 cc_binary(
     name = "day7alternate",
-    deps = [
-        "@abseil-cpp//absl/container:flat_hash_map",
-        "//utils:utils",
-    ],
     srcs = ["day7alternate.cc"],
     data = ["day7alternate.txt"],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/container:flat_hash_map",
+    ],
 )
+
 cc_binary(
     name = "day8",
-    deps = [
-        "//utils:utils",
-    ],
     srcs = ["day8.cc"],
-    data = ["day8.txt", "day8test.txt"],
+    data = [
+        "day8.txt",
+        "day8test.txt",
+    ],
+    deps = [
+        "//utils",
+    ],
 )
+
 cc_binary(
     name = "day9",
-    deps = [
-        "//utils:utils",
-    ],
     srcs = ["day9.cc"],
     data = ["day9.txt"],
+    deps = [
+        "//utils",
+    ],
 )
 
 cc_binary(
@@ -102,16 +109,25 @@ cc_binary(
     srcs = ["day12.cc"],
     data = ["day12.txt"],
     deps = [
-        "//utils:utils",
+        "//utils",
         "@nlohmann_json//:json",
     ],
 )
 
 cc_binary(
     name = "day13",
-    deps = [
-        "//utils:utils",
-    ],
     srcs = ["day13.cc"],
     data = ["day13.txt"],
+    deps = [
+        "//utils",
+    ],
+)
+
+cc_binary(
+    name = "day14",
+    srcs = ["day14.cc"],
+    data = ["day14.txt"],
+    deps = [
+        "//utils",
+    ],
 )
