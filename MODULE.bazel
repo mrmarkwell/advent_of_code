@@ -9,13 +9,15 @@ bazel_dep(name = "abseil-cpp", version = "20240116.2")
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
 
 bazel_dep(name = "boringssl", version = "0.0.0-20240530-2db0eb3")
-
 bazel_dep(name = "nlohmann_json", version = "3.11.3")
+
+# for formatted printing.
+bazel_dep(name = "fmt", version = "11.0.2")
 
 git_override(
     module_name = "hedron_compile_commands",
-    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
     commit = "a14ad3a64e7bf398ab48105aaa0348e032ac87f8",
+    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
     # Replace the commit hash (above) with the latest (https://github.com/hedronvision/bazel-compile-commands-extractor/commits/main).
     # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
 )

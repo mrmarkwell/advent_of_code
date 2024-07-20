@@ -129,5 +129,6 @@ cc_binary(
     data = ["day14.txt"],
     deps = [
         "//utils",
+        "@fmt",
     ],
 )

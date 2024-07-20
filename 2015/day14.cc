@@ -25,6 +25,8 @@ So, in this situation, Comet would win (if the race ended at 1000 seconds).
 Given the descriptions of each reindeer (in your puzzle input), after exactly
 2503 seconds, what distance has the winning reindeer traveled?
 */
+#include <fmt/core.h>
+
 #include <iostream>
 #include <regex>
 #include <string>
@@ -60,6 +62,7 @@ std::vector<Reindeer> GetReindeer(std::vector<std::string> lines) {
   for (const auto& line : lines) {
     std::smatch match;
     std::regex_search(line, match, pattern);
+
     std::cout << match[kNameIdx] << " " << match[kRateIdx] << " "
               << match[kRunDurationIdx] << " " << match[kRestDurationIdx]
               << std::endl;
@@ -94,15 +97,19 @@ int main() {
   std::vector<Reindeer> reindeer = GetReindeer(lines);
   constexpr int kRaceDuration = 2503;
   // constexpr int kRaceDuration = 10;
-  for (int i = 1; i < kRaceDuration; ++i) {
+  for (int i = 1; i <= kRaceDuration; ++i) {
     int max_dist = 0;
     for (auto& r : reindeer) {
-      r.current_dist = ComputeDistAfterTime(r, kRaceDuration);
+      r.current_dist = ComputeDistAfterTime(r, i);
       max_dist = std::max(r.current_dist, max_dist);
+      fmt::print("At {}, {} is at distance {}!\n", i, r.name, r.current_dist);
+      // std::cout << "Time: "
     }
     std::for_each(reindeer.begin(), reindeer.end(), [max_dist](Reindeer& r) {
       if (r.current_dist == max_dist) {
         r.AwardPoint();
+        fmt::print("Point awarded to {}! New total: {}.\n", r.name,
+                   r.point_total);
       }
     });
   }
