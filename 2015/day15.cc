@@ -61,9 +61,7 @@ score of the highest-scoring cookie you can make with a calorie total of 500?
 #include <fmt/core.h>
 
 #include <cassert>
-#include <iostream>
 #include <regex>
-#include <unordered_map>
 #include <vector>
 
 #include "utils/utils.h"
@@ -130,6 +128,11 @@ int CalculateScore(std::vector<IngredientAmount> recipe,
     texture += ingredient.texture * num_of_tsps;
     calories += ingredient.calories * num_of_tsps;
   }
+  // Don't allow negative values.
+  capacity = std::max(0, capacity);
+  durability = std::max(0, durability);
+  flavor = std::max(0, flavor);
+  texture = std::max(0, texture);
 
   int score = capacity * durability * flavor * texture;
 
@@ -192,7 +195,12 @@ int GetTheNastyHealthyMilkDunkingCookieRecipeScore(
         recipe[2].tsp = k;
         recipe[3].tsp = l;
 
+        int old_score = best_score;
         best_score = std::max(best_score, CalculateScore(recipe, true));
+        if (best_score != old_score) {
+          fmt::print("Found a new best score {}: {}, {}, {}, {}\n", best_score,
+                     i, j, k, l);
+        }
       }
     }
   }
@@ -201,9 +209,11 @@ int GetTheNastyHealthyMilkDunkingCookieRecipeScore(
 
 void TestMakeThePerfectMilkDunkingCookieRecipe() {
   std::vector<std::string> test_lines = {
-      "Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories "
+      "Butterscotch: capacity -1, durability -2, flavor 6, texture 3, "
+      "calories "
       "8",
-      "Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3"};
+      "Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories "
+      "3"};
 
   std::vector<IngredientAmount> test_recipe = GetIngredients(test_lines);
 
@@ -232,7 +242,7 @@ int main() {
       aoc::LoadStringsFromFileByLine("./2015/day15.txt");
   std::vector<IngredientAmount> recipe = GetIngredients(lines);
 
-  TheTest();
+  // TheTest();
 
   MakeThePerfectMilkDunkingCookieRecipe(recipe);
   int score = CalculateScore(recipe);
