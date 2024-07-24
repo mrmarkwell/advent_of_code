@@ -172,3 +172,14 @@ cc_binary(
         "@fmt",
     ],
 )
+
+cc_binary(
+    name = "day19_alternate",
+    srcs = ["day19_alternate.cc"],
+    data = ["day19_alternate.txt"],
+    deps = [
+        "//utils",
+        "@fmt",
+    ],
+)
+
