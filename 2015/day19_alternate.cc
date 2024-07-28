@@ -74,9 +74,11 @@ to go from e to the medicine molecule?
 #include <map>
 #include <regex>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
+#include "absl/strings/cord.h"
 #include "utils/utils.h"
 
 std::multimap<std::string, std::string> GetSubstitutions(
@@ -120,6 +122,38 @@ int CountUniqueMolecules(
   return unique_molecules.size();
 }
 
+// Reverses a std::multimap into a std::map.
+std::unordered_map<std::string, std::string> ReverseMap(
+    std::multimap<std::string, std::string> map) {
+  std::unordered_map<std::string, std::string> reverse_map;
+  for (const auto& [key, value] : map) {
+    reverse_map.insert(std::make_pair(value, key));
+  }
+  return reverse_map;
+}
+
+// Function to replace the first occurrence of a substring in an absl::Cord
+bool ReplaceFirstOccurrenceInPlace(absl::Cord& cord,
+                                   const std::string& to_replace,
+                                   const std::string& replacement) {
+  std::string temp_string = std::string(cord);
+  size_t pos = temp_string.find(to_replace);
+
+  if (pos != std::string::npos) {
+    absl::Cord before = cord.Subcord(0, pos);
+    absl::Cord after = cord.Subcord(pos + to_replace.length(),
+                                    cord.size() - (pos + to_replace.length()));
+
+    absl::Cord result = before;
+    result.Append(replacement);
+    result.Append(after);
+
+    cord = result;
+    return true;
+  }
+  return false;
+}
+
 int main() {
   std::vector<std::string> lines =
       aoc::LoadStringsFromFileByLine("./2015/day19_alternate.txt");
@@ -129,5 +163,25 @@ int main() {
       GetSubstitutions(lines);
   fmt::print("Unique Molecules: {}",
              CountUniqueMolecules(molecule, substitutions));
+
+  // Make a reverse substitution map.
+  std::unordered_map<std::string, std::string> reverse_map =
+      ReverseMap(substitutions);
+
+  absl::Cord molecule_cord(molecule);
+
+  int steps = 0;
+  while (molecule_cord != "e") {
+    // NOTE: This should do backtracking when it reaches a dead end.
+    // Alternatively, it could add some randomness.
+    // I didn't need to since it worked first try for my input.
+    for (const auto& [key, value] : reverse_map) {
+      if (ReplaceFirstOccurrenceInPlace(molecule_cord, key, value)) {
+        steps++;
+        fmt::print("{}: {}\n", steps, molecule_cord.Flatten());
+      }
+    }
+  }
+
   return 0;
 }

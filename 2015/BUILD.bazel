@@ -179,7 +179,7 @@ cc_binary(
     data = ["day19_alternate.txt"],
     deps = [
         "//utils",
+        "@abseil-cpp//absl/strings:cord",
         "@fmt",
     ],
 )
-
