@@ -183,3 +183,12 @@ cc_binary(
         "@fmt",
     ],
 )
+
+cc_binary(
+    name = "day20",
+    srcs = ["day20.cc"],
+    deps = [
+        "//utils",
+        "@fmt",
+    ],
+)
