@@ -116,7 +116,7 @@ struct Player : public Character {
     if (item.type == Type::kWeapon && !weapon) {
       return true;
     }
-    if (item.type == Type::kArmor && !armor) {
+    if (item.type == Type::kArmor && !armor_set) {
       return true;
     }
     if (item.type == Type::kRing && (!right_ring || !left_ring)) {
@@ -263,6 +263,54 @@ Defense +3   80     0       3
   FindCheapestWinningPlayer(shop, Player{}, /*shop_idx=*/0, cheapest_win);
 
   fmt::print("Cheapest_win: {}\n", cheapest_win);
+
+  // Below is a more direct iterative solution.
+
+  std::vector<Item> weapons = {{"Dagger", 8, 4, 0, Type::kWeapon},
+                               {"Shortsword", 10, 5, 0, Type::kWeapon},
+                               {"Warhammer", 25, 6, 0, Type::kWeapon},
+                               {"Longsword", 40, 7, 0, Type::kWeapon},
+                               {"Greataxe", 74, 8, 0, Type::kWeapon}};
+
+  std::vector<Item> armors = {{"Leather", 13, 0, 1, Type::kArmor},
+                              {"Chainmail", 31, 0, 2, Type::kArmor},
+                              {"Splintmail", 53, 0, 3, Type::kArmor},
+                              {"Bandedmail", 75, 0, 4, Type::kArmor},
+                              {"Platemail", 102, 0, 5, Type::kArmor},
+                              {"Empty", 0, 0, 0, Type::kArmor}};
+
+  std::vector<Item> rings = {
+      {"Damage1", 25, 1, 0, Type::kRing},  {"Damage2", 50, 2, 0, Type::kRing},
+      {"Damage3", 100, 3, 0, Type::kRing}, {"Armor1", 20, 0, 1, Type::kRing},
+      {"Armor2", 40, 0, 2, Type::kRing},   {"Armor3", 80, 0, 3, Type::kRing},
+      {"Empty1", 0, 0, 0, Type::kRing},    {"Empty2", 0, 0, 0, Type::kRing}};
+
+  cheapest_win = std::numeric_limits<int>::max();
+  int most_expensive_loss = 0;
+  for (const auto& weapon : weapons) {
+    for (const auto& armor : armors) {
+      for (int i = 0; i < rings.size(); ++i) {
+        for (int j = 0; j < rings.size(); ++j) {
+          if (i == j) {
+            // Can't grab the same ring twice.
+            continue;
+          }
+          Player player;
+          player.Take(weapon);
+          player.Take(armor);
+          player.Take(rings[i]);
+          player.Take(rings[j]);
+          if (player.WouldWin()) {
+            cheapest_win = std::min(cheapest_win, player.Cost());
+          } else {
+            most_expensive_loss = std::max(most_expensive_loss, player.Cost());
+          }
+        }
+      }
+    }
+  }
+  fmt::print("Cheapest win: {}\nMost Expensive loss: {}\n", cheapest_win,
+             most_expensive_loss);
 
   return 0;
 }
