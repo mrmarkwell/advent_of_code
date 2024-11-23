@@ -229,3 +229,13 @@ cc_binary(
         "@fmt",
     ],
 )
+
+cc_binary(
+    name = "day25",
+    srcs = ["day25.cc"],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@fmt",
+    ],
+)
