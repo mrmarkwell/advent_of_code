@@ -1,6 +1,9 @@
 #include <numeric>
 #include <string>
+#include <string_view>
 #include <vector>
+
+#include "absl/status/statusor.h"
 
 namespace aoc {
 
@@ -25,6 +28,7 @@ inline auto TotalSize = [](const auto& container_of_containers) -> size_t {
 
 // Trim leading and trailing whitespace from a string.
 std::string Trim(const std::string& str);
+std::string_view TrimWhitespace(std::string_view str);
 
 // Strip leading and trailing whitespace from all strings in supplied vec.
 void StripWhitespace(std::vector<std::string>& vec);
@@ -36,5 +40,11 @@ std::string ReadFileToString(const std::string& file_path);
 // std::vector.
 std::vector<std::string> LoadStringsFromFileByLine(
     const std::string& file_path);
+
+// Splits a comma-delimited string into a vector of trimmed substrings.
+std::vector<std::string> SplitCommaDelimitedString(std::string_view input);
+
+// Converts an input string into an integer or returns a failing status.
+absl::StatusOr<int64_t> ConvertStringViewToInt64(std::string_view input) {
 
 }  // namespace aoc

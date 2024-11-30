@@ -1,8 +1,8 @@
 cc_binary(
     name = "day1",
     srcs = ["day1.cc"],
-    data = ["day1.txt"],
     deps = [
         "//utils",
+        "@fmt",
     ],
 )

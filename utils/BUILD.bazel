@@ -1,7 +1,9 @@
 cc_library(
     name = "utils",
-    deps = ["@abseil-cpp//absl/strings"],
-    hdrs = ["utils.h"],
     srcs = ["utils.cc"],
+    hdrs = ["utils.h"],
     visibility = ["//visibility:public"],
+    deps = [
+        "@abseil-cpp//absl/status:statusor",
+    ],
 )

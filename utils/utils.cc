@@ -1,11 +1,17 @@
 #include <algorithm>
 #include <cassert>
+#include <cctype>
+#include <charconv>
 #include <fstream>
 #include <ios>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string_view>
+#include <system_error>
 #include <vector>
+
+#include "absl/status/statusor.h"
 
 namespace aoc {
 // Function to strip leading and trailing whitespace from a single string
@@ -54,6 +60,70 @@ std::vector<std::string> LoadStringsFromFileByLine(
     str_vector.push_back(str);
   }
   return str_vector;
+}
+// Helper function to trim leading and trailing whitespace from a string_view.
+std::string_view Trim(std::string_view str) {
+  auto start = std::find_if_not(str.begin(), str.end(), [](unsigned char ch) {
+    return std::isspace(ch);
+  });
+  auto end = std::find_if_not(str.rbegin(), str.rend(), [](unsigned char ch) {
+               return std::isspace(ch);
+             }).base();
+
+  // If the string is entirely whitespace, return an empty string_view.
+  if (start >= end) {
+    return std::string_view();
+  }
+
+  return std::string_view(&(*start), std::distance(start, end));
+}
+
+// Splits a comma-delimited string into a vector of trimmed substrings.
+std::vector<std::string> SplitCommaDelimitedString(std::string_view input) {
+  std::vector<std::string> result;
+
+  while (!input.empty()) {
+    // Find the next comma.
+    size_t pos = input.find(',');
+
+    // Extract the substring before the comma.
+    std::string_view token = input.substr(0, pos);
+
+    // Trim whitespace and convert to std::string before adding to the result.
+    result.emplace_back(std::string(Trim(token)));
+
+    // If no comma was found, we're done.
+    if (pos == std::string_view::npos) {
+      break;
+    }
+
+    // Move to the substring after the comma.
+    input.remove_prefix(pos + 1);
+  }
+
+  return result;
+}
+// Function to convert the entire string into an int64_t
+absl::StatusOr<int64_t> ConvertStringViewToInt64(std::string_view input) {
+  // Handle the case where the string is empty
+  if (input.empty()) {
+    return absl::InvalidArgumentError("Input string is empty.");
+  }
+
+  // Parse the entire string into an int64_t using std::from_chars
+  int64_t result = 0;
+  auto [ptr, ec] = std::from_chars(input.begin(), input.end(), result);
+
+  // Handle errors during conversion
+  if (ec == std::errc::invalid_argument) {
+    return absl::InvalidArgumentError(
+        "The input string contains invalid characters.");
+  }
+  if (ec == std::errc::result_out_of_range) {
+    return absl::OutOfRangeError("The number is out of range for an int64_t.");
+  }
+
+  return result;
 }
 
 }  // namespace aoc
