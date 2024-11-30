@@ -29,6 +29,16 @@ Following R2, L3 leaves you 2 blocks East and 3 blocks North, or 5 blocks away.
 R2, R2, R2 leaves you 2 blocks due South of your starting position, which is 2
 blocks away. R5, L5, R5, R3 leaves you 12 blocks away. How many blocks away is
 Easter Bunny HQ?
+
+--- Part Two ---
+Then, you notice the instructions continue on the back of the Recruiting
+Document. Easter Bunny HQ is actually at the first location you visit twice.
+
+For example, if your instructions are R8, R4, R4, R8, the first location you
+visit twice is 4 blocks away, due East.
+
+How many blocks away is the first location you visit twice?
+
 */
 
 #include <fmt/core.h>
@@ -37,6 +47,8 @@ Easter Bunny HQ?
 #include <string_view>
 #include <vector>
 
+#include "absl/log/check.h"
+#include "utils/status_macros.h"
 #include "utils/utils.h"
 
 constexpr int kNumDirections = 4;
@@ -55,7 +67,14 @@ class Coordinate {
       fmt::print("ERROR: Empty instruction.\n");
       return;
     }
+    Turn(instruction);
+
+    CHECK_OK(Move(instruction));
+
+    fmt::print("{}, {}\n", x_, y_);
   }
+
+  int64_t DistanceFromOrigin() const { return x_ + y_; }
 
  private:
   // Apply the 90 degree turn.
@@ -72,7 +91,25 @@ class Coordinate {
     fmt::print("ERROR: Bad instruction? {}\n", instruction);
   }
 
-  void Move(std::string_view instruction) {}
+  absl::Status Move(std::string_view instruction) {
+    ASSIGN_OR_RETURN(int64_t distance,
+                     aoc::ConvertStringViewToInt64(instruction.substr(1)));
+    switch (direction_) {
+      case kNorth:
+        y_ += distance;
+        break;
+      case kSouth:
+        y_ -= distance;
+        break;
+      case kEast:
+        x_ += distance;
+        break;
+      case kWest:
+        x_ -= distance;
+        break;
+    }
+    return absl::OkStatus();
+  }
 
   int x_ = 0;
   int y_ = 0;
@@ -94,8 +131,13 @@ int main() {
   std::vector<std::string> instructions =
       aoc::SplitCommaDelimitedString(kInput);
 
+  Coordinate coordinate;
+
   for (std::string_view instruction : instructions) {
+    coordinate.ApplyInstruction(instruction);
   }
+
+  fmt::print("Distance from origin: {}\n", coordinate.DistanceFromOrigin());
 
   return 0;
 }

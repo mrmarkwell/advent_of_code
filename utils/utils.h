@@ -1,3 +1,4 @@
+#pragma once
 #include <numeric>
 #include <string>
 #include <string_view>
@@ -45,6 +46,6 @@ std::vector<std::string> LoadStringsFromFileByLine(
 std::vector<std::string> SplitCommaDelimitedString(std::string_view input);
 
 // Converts an input string into an integer or returns a failing status.
-absl::StatusOr<int64_t> ConvertStringViewToInt64(std::string_view input) {
+absl::StatusOr<int64_t> ConvertStringViewToInt64(std::string_view input);
 
 }  // namespace aoc
