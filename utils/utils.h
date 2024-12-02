@@ -1,5 +1,6 @@
 #pragma once
 #include <numeric>
+#include <regex>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -36,6 +37,30 @@ void StripWhitespace(std::vector<std::string>& vec);
 
 // Read the file by file path into a std::string.
 std::string ReadFileToString(const std::string& file_path);
+
+// Utility function to parse input data based on a given regex pattern and
+// processing function.
+template <typename T>
+std::vector<T> ParseDataWithRegex(
+    const std::vector<std::string>& lines, const std::regex& pattern,
+    std::function<T(const std::vector<std::string>&)> ProcessMatchFunction) {
+  std::vector<T> results;
+
+  for (const auto& line : lines) {
+    std::smatch matches;
+    if (std::regex_search(line, matches, pattern)) {
+      // Extract all matches except the first one.
+      std::vector<std::string> captured_groups;
+      for (size_t i = 1; i < matches.size(); ++i) {
+        captured_groups.push_back(matches[i].str());
+      }
+      // Process the captured groups
+      results.push_back(ProcessMatchFunction(captured_groups));
+    }
+  }
+
+  return results;
+};
 
 // Read the file by file path, returning each line as a std::string in a
 // std::vector.
