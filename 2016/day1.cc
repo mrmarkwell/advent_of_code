@@ -129,7 +129,7 @@ int main() {
       "R3, L2, R2, R1"};
 
   std::vector<std::string> instructions =
-      aoc::SplitCommaDelimitedString(kInput);
+      aoc::SplitDelimitedString(kInput, ",");
 
   Coordinate coordinate;
 

@@ -78,31 +78,50 @@ std::string_view Trim(std::string_view str) {
   return std::string_view(&(*start), std::distance(start, end));
 }
 
-// Splits a comma-delimited string into a vector of trimmed substrings.
-std::vector<std::string> SplitCommaDelimitedString(std::string_view input) {
+// Splits a delimited string into a vector of trimmed substrings.
+std::vector<std::string> SplitDelimitedString(std::string_view input,
+                                              std::string_view delimiter = "") {
   std::vector<std::string> result;
 
-  while (!input.empty()) {
-    // Find the next comma.
-    size_t pos = input.find(',');
+  if (delimiter.empty()) {
+    // Split by whitespace when delimiter is empty.
+    size_t start = 0;
+    while (start < input.size()) {
+      // Find the start of the next word.
+      start = input.find_first_not_of(" \t\n\r", start);
+      if (start == std::string_view::npos) {
+        break;
+      }
 
-    // Extract the substring before the comma.
-    std::string_view token = input.substr(0, pos);
+      // Find the end of the current word.
+      size_t end = input.find_first_of(" \t\n\r", start);
+      result.emplace_back(std::string(Trim(input.substr(start, end - start))));
 
-    // Trim whitespace and convert to std::string before adding to the result.
-    result.emplace_back(std::string(Trim(token)));
-
-    // If no comma was found, we're done.
-    if (pos == std::string_view::npos) {
-      break;
+      // Move to the next part of the string.
+      start = end;
     }
+  } else {
+    // Split by the specified delimiter.
+    while (!input.empty()) {
+      size_t pos = input.find(delimiter);
 
-    // Move to the substring after the comma.
-    input.remove_prefix(pos + 1);
+      // Extract the substring before the delimiter.
+      std::string_view token = input.substr(0, pos);
+      result.emplace_back(std::string(Trim(token)));
+
+      // If no delimiter was found, we're done.
+      if (pos == std::string_view::npos) {
+        break;
+      }
+
+      // Move to the substring after the delimiter.
+      input.remove_prefix(pos + delimiter.size());
+    }
   }
 
   return result;
 }
+
 // Function to convert the entire string into an int64_t
 absl::StatusOr<int64_t> ConvertStringViewToInt64(std::string_view input) {
   // Handle the case where the string is empty

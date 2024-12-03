@@ -6,3 +6,14 @@ cc_binary(
         "//utils",
     ],
 )
+
+cc_binary(
+    name = "day2",
+    srcs = ["day2.cc"],
+    data = ["day2.txt"],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/log:check",
+        "@fmt",
+    ],
+)

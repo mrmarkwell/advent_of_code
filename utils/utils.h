@@ -6,8 +6,21 @@
 #include <vector>
 
 #include "absl/status/statusor.h"
+#include "fmt/core.h"
 
 namespace aoc {
+
+template <typename T>
+void PrettyPrintVector(const std::vector<T>& vec) {
+  fmt::print("[");
+  for (size_t i = 0; i < vec.size(); ++i) {
+    fmt::print("{}", vec[i]);
+    if (i < vec.size() - 1) {
+      fmt::print(", ");
+    }
+  }
+  fmt::print("]\n");
+}
 
 // Kind of goofy, so here is an explanation.
 // - This is a generic lambda  a lambda that takes a reference to a deduced type
@@ -67,8 +80,8 @@ std::vector<T> ParseDataWithRegex(
 std::vector<std::string> LoadStringsFromFileByLine(
     const std::string& file_path);
 
-// Splits a comma-delimited string into a vector of trimmed substrings.
-std::vector<std::string> SplitCommaDelimitedString(std::string_view input);
+std::vector<std::string> SplitDelimitedString(std::string_view input,
+                                              std::string_view delimiter = "");
 
 // Converts an input string into an integer or returns a failing status.
 absl::StatusOr<int64_t> ConvertStringViewToInt64(std::string_view input);
