@@ -10,6 +10,37 @@
 
 namespace aoc {
 
+// Trait to detect if a type is a container
+template <typename, typename = void>
+struct is_container : std::false_type {};
+
+template <typename T>
+struct is_container<T, std::void_t<decltype(std::begin(std::declval<T&>())),
+                                   decltype(std::end(std::declval<T&>())),
+                                   typename T::value_type>> : std::true_type {};
+
+template <typename T>
+inline constexpr bool is_container_v = is_container<T>::value;
+
+// Contains function template
+template <typename Container, typename T>
+std::enable_if_t<is_container_v<Container>, bool> Contains(const Container& c,
+                                                           const T& value) {
+  using element_type = typename Container::value_type;
+  if constexpr (is_container_v<element_type>) {
+    // Element type is a container, recurse into each element
+    for (const auto& inner : c) {
+      if (Contains(inner, value)) {
+        return true;
+      }
+    }
+    return false;
+  } else {
+    // Element type is not a container, use std::find directly
+    return std::find(std::begin(c), std::end(c), value) != std::end(c);
+  }
+}
+
 template <typename T>
 void PrettyPrintVector(const std::vector<T>& vec) {
   fmt::print("[");
