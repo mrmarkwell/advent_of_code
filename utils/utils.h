@@ -10,6 +10,10 @@
 
 namespace aoc {
 
+// Quick macro to print a variable when debugging.
+// Usage: PRINT(foo);
+#define PRINT(var) fmt::print(#var ": {}\n", var)
+
 // Trait to detect if a type is a container
 template <typename, typename = void>
 struct is_container : std::false_type {};

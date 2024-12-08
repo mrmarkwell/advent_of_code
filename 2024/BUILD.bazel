@@ -28,3 +28,14 @@ cc_binary(
         "@fmt",
     ],
 )
+
+cc_binary(
+    name = "day6",
+    srcs = ["day6.cc"],
+    data = ["day6.txt"],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/log:check",
+        "@fmt",
+    ],
+)
