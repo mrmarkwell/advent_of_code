@@ -36,6 +36,8 @@ cc_binary(
     deps = [
         "//utils",
         "@abseil-cpp//absl/log:check",
+        "@abseil-cpp//absl/container:flat_hash_set",
+        "@abseil-cpp//absl/container:flat_hash_map",
         "@fmt",
     ],
 )

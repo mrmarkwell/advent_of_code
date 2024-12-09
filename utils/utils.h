@@ -14,6 +14,25 @@ namespace aoc {
 // Usage: PRINT(foo);
 #define PRINT(var) fmt::print(#var ": {}\n", var)
 
+// Hashable, equality comparable Coordinate.
+// This coordinate denotes rows and columns rather than x and y. The meaning of
+// 'row' and 'col' can be determined by the client code.
+struct Coordinate {
+  int row{0};
+  int col{0};
+
+  bool operator==(const Coordinate& other) const {
+    return row == other.row && col == other.col;
+  }
+  template <typename H>
+  friend H AbslHashValue(H h, const Coordinate& m);
+};
+
+template <typename H>
+H AbslHashValue(H h, const Coordinate& m) {
+  return H::combine(std::move(h), m.row, m.col);
+}
+
 // Trait to detect if a type is a container
 template <typename, typename = void>
 struct is_container : std::false_type {};

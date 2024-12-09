@@ -217,14 +217,13 @@ How many different positions could you choose for this obstruction?
 */
 #include <cstdlib>
 
+#include "absl/container/flat_hash_map.h"
+#include "absl/container/flat_hash_set.h"
 #include "absl/log/check.h"
 #include "fmt/core.h"
 #include "utils/utils.h"
 
-struct Coordinate {
-  int row{0};
-  int col{0};
-};
+using ::aoc::Coordinate;
 
 class Map {
  public:
@@ -246,15 +245,76 @@ class Map {
   }
 
   // Returns true if the guard is present.
-  bool GuardPresent() { return guard_.has_value(); }
+  bool HasGuard() { return guard_.has_value(); }
+
+  // Does not modify the map, but tries to place an obstacle in front of the
+  // guard at the current location and determines if the guard would become
+  // stuck in a loop if an obstacle was added there. Returns true if so, or
+  // false if not.
+  bool NextObstacleCreatesLoop() {
+    if (!HasGuard()) return false;
+    Coordinate candidate = NextCoordinate();
+
+    // We've already tried an obstacle at this exact spot and found that it
+    // creates a different loop.
+    if (loop_creating_obstacles_.contains(candidate)) return false;
+
+    // We can't place an obstacle out of bounds.
+    if (OutOfBounds(candidate)) return false;
+    char candidate_char = GetChar(candidate);
+
+    // We can't place an obstacle on an obstacle.
+    if (candidate_char == kObstacle) return false;
+
+    // Create a copy of the map up to this point.
+    Map test_map{map_};
+
+    // Make the next spot an obstacle in the map.
+    test_map.SetChar(candidate, kObstacle);
+
+    absl::flat_hash_map<Coordinate, int> potential_loop_path{};
+    while (true) {
+      test_map.Tick();
+      if (!test_map.HasGuard()) {
+        // The guard has left the map. There was no loop.
+        return false;
+      }
+
+      Coordinate next_coordinate = test_map.NextCoordinate();
+
+      potential_loop_path[next_coordinate]++;
+      // fmt::print("Next: {}, {}\n", next_coordinate.row, next_coordinate.col);
+      // TODO: None of my ideas here work. I need to figure out how to determine
+      // if there is a loop or not correctly.
+      if (potential_loop_path[next_coordinate] > 100) {
+        // if (test_map.NextCoordinate() == candidate &&
+        //     test_map.GetGuardChar() == GetGuardChar()) {
+        //  We returned to this obstacle while going the same direction as when
+        //  we placed it. We've created a loop.
+        loop_creating_obstacles_.insert(candidate);
+        fmt::print("loop_creating_obstacles_.size(): {}\n",
+                   loop_creating_obstacles_.size());
+
+        // Print it out so we can confirm it works.
+        // fmt::print("\nFound Loop Obstacle:\n");
+        // test_map.SetChar(candidate, 'O');
+        // test_map.Print();
+        // fmt::print("\n\n");
+        return true;
+      }
+    }
+    return true;
+  }
+
+  char GetGuardChar() const { return GetChar(*guard_); }
 
   // Tick forward time by one step.
   void Tick() {
-    if (!GuardPresent()) {
+    if (!HasGuard()) {
       // Nothing to do.
       return;
     }
-    char& g = GetChar(*guard_);
+    char g = GetChar(*guard_);
     CHECK(g != kVisited) << "Shouldn't be possible???";
 
     Coordinate next = NextCoordinate();
@@ -264,7 +324,7 @@ class Map {
     if (OutOfBounds(next)) {
       // fmt::print("OOB\n");
       //  Visit the current location and remove the guard from the map.
-      g = kVisited;
+      SetChar(*guard_, kVisited);
       guard_ = std::nullopt;
       return;
     }
@@ -272,10 +332,9 @@ class Map {
     if (next_char == kEmpty || next_char == kVisited) {
       // fmt::print("Empty\n");
       //  Move the guard coordinate to the next one, and move the guard.
+      SetChar(*guard_, kVisited);
+      SetChar(next, g);
       guard_ = next;
-      GetChar(*guard_) = g;
-      // Mark this spot as visited.
-      g = kVisited;
     }
     if (next_char == kObstacle) {
       //  fmt::print("Obstacle\n");
@@ -283,6 +342,7 @@ class Map {
       TurnRight();
     }
   }
+
   int CountVisited() {
     int visited = 0;
     for (std::string_view row : map_) {
@@ -299,24 +359,24 @@ class Map {
 
  private:
   void TurnRight() {
-    char& guard_char = GetChar(*guard_);
+    char guard_char = GetChar(*guard_);
     switch (guard_char) {
       case '^':
-        guard_char = '>';
+        SetChar(*guard_, '>');
         return;
       case '>':
-        guard_char = 'v';
+        SetChar(*guard_, 'v');
         return;
       case 'v':
-        guard_char = '<';
+        SetChar(*guard_, '<');
         return;
       case '<':
-        guard_char = '^';
+        SetChar(*guard_, '^');
         return;
     }
   }
 
-  Coordinate NextCoordinate() {
+  Coordinate NextCoordinate() const {
     Coordinate next = *guard_;
     char guard_char = GetChar(next);
     if (guard_char == '^') next.row--;
@@ -326,23 +386,34 @@ class Map {
     return next;
   }
 
-  bool OutOfBounds(Coordinate c) {
+  bool OutOfBounds(Coordinate c) const {
     bool in_bounds = c.row >= 0 && c.row < map_.size() && c.col >= 0 &&
                      c.col < map_.front().size();
     return !in_bounds;
   }
-  char& GetChar(Coordinate c) { return map_[c.row][c.col]; }
+  void SetChar(Coordinate c, char val) { map_[c.row][c.col] = val; }
+  char GetChar(Coordinate c) const { return map_[c.row][c.col]; }
   std::vector<std::string> map_;
   std::optional<Coordinate> guard_;
+  absl::flat_hash_set<Coordinate> loop_creating_obstacles_;
 };
+
 int main() {
   Map map(aoc::LoadStringsFromFileByLine("./2024/day6.txt"));
 
-  while (map.GuardPresent()) {
+  int count_loop_obstacles = 0;
+
+  while (map.HasGuard()) {
     // fmt::print("Step!\n");
     map.Tick();
+    static int count = 0;
+    fmt::print("Step {}================================\n", ++count);
+    if (map.NextObstacleCreatesLoop()) {
+      ++count_loop_obstacles;
+    }
     // map.Print();
   }
   map.Print();
   fmt::print("Total Visited: {}\n", map.CountVisited());
+  fmt::print("Loop Obstacles Added: {}\n", count_loop_obstacles);
 }
