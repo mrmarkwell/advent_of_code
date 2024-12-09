@@ -74,7 +74,6 @@ remove a single level from unsafe reports. How many reports are now safe?
 #include <cstdlib>
 
 #include "absl/log/check.h"
-#include "fmt/core.h"
 #include "utils/utils.h"
 
 bool IsSafe(const std::vector<int64_t>& report) {
@@ -150,8 +149,9 @@ int main() {
     }
   }
 
-  fmt::print("Number of safe reports: {}\n", num_safe_reports);
-  fmt::print("Number of safe reports (part 2): {}\n", num_safe_reports_part_2);
+  // fmt::print("Number of safe reports: {}\n", num_safe_reports);
+  // fmt::print("Number of safe reports (part 2): {}\n",
+  // num_safe_reports_part_2);
 
   return 0;
 }
