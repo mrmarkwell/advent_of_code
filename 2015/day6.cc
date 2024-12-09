@@ -99,7 +99,7 @@ Action StringToAction(const std::string& actionStr) {
   } else if (actionStr == "toggle") {
     return Action::kToggle;
   } else {
-    throw std::invalid_argument("Unknown action: " + actionStr);
+    exit(1);
   }
 }
 

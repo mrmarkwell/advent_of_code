@@ -43,7 +43,7 @@ Marie with her computer. Definitely not to distract you, what is the value in
 register b after the program is finished executing if register a starts as 1
 instead?
 */
-#include <fmt/core.h>
+#include <print>
 
 #include <string>
 #include <vector>
@@ -124,7 +124,7 @@ int main() {
 
   for (int i = 0; i < instructions.size(); ++i) {
     std::string& instruction = instructions[i];
-    fmt::print("Executing instruction {}. a[{}] b[{}] instruction: {}\n", i, a,
+    std::print("Executing instruction {}. a[{}] b[{}] instruction: {}\n", i, a,
                b, instruction);
     // If this instruction requires a register, store a ref to it here.
     int64_t& reg = GetRegister(instruction);
@@ -146,6 +146,6 @@ int main() {
       }
     }
   }
-  fmt::print("The final value of the registers are a: {} b: {}\n", a, b);
+  std::print("The final value of the registers are a: {} b: {}\n", a, b);
   return 0;
 }

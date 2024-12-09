@@ -1,4 +1,4 @@
-#include <fmt/core.h>
+#include <print>
 
 #include <cassert>
 #include <regex>
@@ -10,17 +10,17 @@
 
 void PrettyPrintMap(
     const std::unordered_map<std::string, std::vector<std::string>>& map) {
-  fmt::print("Map contents:\n");
+  std::print("Map contents:\n");
   for (const auto& pair : map) {
-    fmt::print("{}: ", pair.first);
-    fmt::print("[");
+    std::print("{}: ", pair.first);
+    std::print("[");
     for (size_t i = 0; i < pair.second.size(); ++i) {
-      fmt::print("{}", pair.second[i]);
+      std::print("{}", pair.second[i]);
       if (i < pair.second.size() - 1) {
-        fmt::print(", ");
+        std::print(", ");
       }
     }
-    fmt::print("]\n");
+    std::print("]\n");
   }
 }
 
@@ -135,7 +135,7 @@ int main() {
 
   std::unordered_set<std::string> distinct_molecules =
       GetNextDistinctMolecules(molecule_modifications, medicine_molecule);
-  fmt::print("There are {} distinct molecule variations.\n",
+  std::print("There are {} distinct molecule variations.\n",
              distinct_molecules.size());
 
   return 0;

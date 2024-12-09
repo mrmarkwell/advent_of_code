@@ -69,7 +69,7 @@ of each item.
 
 What is the most amount of gold you can spend and still lose the fight?
 */
-#include <fmt/core.h>
+#include <print>
 
 #include <algorithm>
 #include <optional>
@@ -111,7 +111,7 @@ struct Player : public Character {
   std::optional<Item> left_ring = std::nullopt;
 
   void Print() {
-    fmt::print("Equipment:[{}, {}, {}, {}] Cost: {} Win: {}\n",
+    std::print("Equipment:[{}, {}, {}, {}] Cost: {} Win: {}\n",
                weapon ? weapon->name : "None",
                armor_set ? armor_set->name : "None",
                right_ring ? right_ring->name : "None",
@@ -163,7 +163,7 @@ struct Player : public Character {
     cost += right_ring ? right_ring->cost : 0;
     cost += left_ring ? left_ring->cost : 0;
     if (cost < 0) {
-      fmt::print("Cost < 0. Weapon: {}: {}, {}: {}, {}: {}, {}: {}\n",
+      std::print("Cost < 0. Weapon: {}: {}, {}: {}, {}: {}, {}: {}\n",
                  weapon ? weapon->name : "None", weapon ? weapon->cost : -1,
                  armor_set ? armor_set->name : "None",
                  armor_set ? armor_set->cost : -1,
@@ -208,7 +208,7 @@ void FindCheapestWinningPlayer(const std::vector<Item>& shop, Player player,
       // This is the cheapest winning player!
 
       cheapest_win = std::min(new_player.Cost(), cheapest_win);
-      // fmt::print("Found a cheap win! Cost: {}, Cheapest: {}\n",
+      // std::print("Found a cheap win! Cost: {}, Cheapest: {}\n",
       //            player.Cost(), cheapest_win);
     }
     FindCheapestWinningPlayer(shop, new_player, shop_idx + 1, cheapest_win);
@@ -269,7 +269,7 @@ Defense +3   80     0       3
   int cheapest_win = std::numeric_limits<int>::max();
   FindCheapestWinningPlayer(shop, Player{}, /*shop_idx=*/0, cheapest_win);
 
-  fmt::print("Cheapest_win: {}\n", cheapest_win);
+  std::print("Cheapest_win: {}\n", cheapest_win);
 
   // Below is a more direct iterative solution.
 
@@ -316,7 +316,7 @@ Defense +3   80     0       3
       }
     }
   }
-  fmt::print("Cheapest win: {}\nMost Expensive loss: {}\n", cheapest_win,
+  std::print("Cheapest win: {}\nMost Expensive loss: {}\n", cheapest_win,
              most_expensive_loss);
 
   return 0;

@@ -1,8 +1,6 @@
-#include <fmt/core.h>
-#include <fmt/ranges.h>
-
 #include <algorithm>
 #include <cassert>
+#include <print>
 
 #include "utils/utils.h"
 
@@ -12,14 +10,14 @@ struct Neighbors {
 };
 
 void PrettyPrint(const std::vector<std::string>& vec) {
-  fmt::print("[");
+  std::print("[");
   for (size_t i = 0; i < vec.size(); ++i) {
-    fmt::print("\"{}\"", vec[i]);
+    std::print("\"{}\"", vec[i]);
     if (i != vec.size() - 1) {
-      fmt::print(", ");
+      std::print(", ");
     }
   }
-  fmt::print("]\n");
+  std::print("]\n");
 }
 
 bool IsInBounds(const std::vector<std::string>& lights, int row, int col) {
@@ -127,7 +125,7 @@ int main() {
   }
 
   int lights_on = CountOnLights(new_lights);
-  fmt::print("After 100 iterations, {} lights are on.\n", lights_on);
+  std::print("After 100 iterations, {} lights are on.\n", lights_on);
 
   new_lights = initial_lights;
   for (int i = 0; i < 100; i++) {
@@ -135,7 +133,7 @@ int main() {
   }
 
   lights_on = CountOnLights(new_lights);
-  fmt::print(
+  std::print(
       "After 100 iterations with the corner lights stuck, {} lights are on.\n",
       lights_on);
 

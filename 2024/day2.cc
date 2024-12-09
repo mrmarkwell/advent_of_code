@@ -149,8 +149,8 @@ int main() {
     }
   }
 
-  // fmt::print("Number of safe reports: {}\n", num_safe_reports);
-  // fmt::print("Number of safe reports (part 2): {}\n",
+  // std::print("Number of safe reports: {}\n", num_safe_reports);
+  // std::print("Number of safe reports (part 2): {}\n",
   // num_safe_reports_part_2);
 
   return 0;

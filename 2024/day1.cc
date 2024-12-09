@@ -102,7 +102,7 @@ Once again consider your left and right lists. What is their similarity score?
 #include <regex>
 #include <unordered_map>
 
-#include "../utils/utils.h"
+#include "utils/utils.h"
 
 std::pair<int, int> ParseLine(const std::string& line) {
   static const std::regex pattern(R"((\d+)\s+(\d+))");
@@ -113,7 +113,7 @@ std::pair<int, int> ParseLine(const std::string& line) {
     int second = std::stoi(match[2].str());
     return std::pair(first, second);
   } else {
-    throw std::invalid_argument("Line format is invalid: " + line);
+    exit(1);
   }
 }
 

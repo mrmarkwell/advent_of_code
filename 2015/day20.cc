@@ -43,7 +43,7 @@ house.
 With these changes, what is the new lowest house number of the house to get at
 least as many presents as the number in your puzzle input?
 */
-#include <fmt/core.h>
+#include <print>
 
 #include <cmath>
 #include <limits>
@@ -87,7 +87,7 @@ int main() {
   for (int i = 1;; ++i) {
     int presents = ComputeNumberOfPresents(i, kElfMultiplier);
     if (presents > kInput) {
-      fmt::print("House {} gets {} presents.\n", i, presents);
+      std::print("House {} gets {} presents.\n", i, presents);
       break;
     }
   }
@@ -96,7 +96,7 @@ int main() {
   for (int i = 1;; ++i) {
     int presents = ComputeNumberOfPresents(i, kElfMultiplierPartTwo, kElfLimit);
     if (presents > kInput) {
-      fmt::print("Part 2: House {} gets {} presents.\n", i, presents);
+      std::print("Part 2: House {} gets {} presents.\n", i, presents);
       break;
     }
   }

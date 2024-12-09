@@ -2,7 +2,7 @@
 
 # Choose the most recent version available at
 # https://registry.bazel.build/modules/abseil-cpp.
-bazel_dep(name = "abseil-cpp", version = "20240116.2")
+bazel_dep(name = "abseil-cpp", version = "20240722.0")
 
 # Hedron's Compile Commands Extractor for Bazel
 # https://github.com/hedronvision/bazel-compile-commands-extractor
@@ -10,9 +10,6 @@ bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
 
 bazel_dep(name = "boringssl", version = "0.0.0-20240530-2db0eb3")
 bazel_dep(name = "nlohmann_json", version = "3.11.3")
-
-# for formatted printing.
-bazel_dep(name = "fmt", version = "10.2.1")
 
 git_override(
     module_name = "hedron_compile_commands",

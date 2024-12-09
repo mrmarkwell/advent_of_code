@@ -1,18 +1,19 @@
 #pragma once
 #include <numeric>
+#include <print>
 #include <regex>
 #include <string>
 #include <string_view>
 #include <vector>
 
 #include "absl/status/statusor.h"
-#include "fmt/core.h"
+// #include "<print>"
 
 namespace aoc {
 
 // Quick macro to print a variable when debugging.
 // Usage: PRINT(foo);
-// #define PRINT(var) fmt::print(#var ": {}\n", var)
+#define PRINT(var) std::print(#var ": {}\n", var)
 
 // // Hashable, equality comparable Coordinate.
 // // This coordinate denotes rows and columns rather than x and y. The meaning
@@ -29,55 +30,53 @@ struct Coordinate {
   friend H AbslHashValue(H h, const Coordinate& m);
 };
 
-// template <typename H>
-// H AbslHashValue(H h, const Coordinate& m) {
-//   return H::combine(std::move(h), m.row, m.col);
-// }
+template <typename H>
+H AbslHashValue(H h, const Coordinate& m) {
+  return H::combine(std::move(h), m.row, m.col);
+}
 
 // Trait to detect if a type is a container
-// template <typename, typename = void>
-// struct is_container : std::false_type {};
+template <typename, typename = void>
+struct is_container : std::false_type {};
 
-// template <typename T>
-// struct is_container<T, std::void_t<decltype(std::begin(std::declval<T&>())),
-//                                    decltype(std::end(std::declval<T&>())),
-//                                    typename T::value_type>> : std::true_type
-//                                    {};
+template <typename T>
+struct is_container<T, std::void_t<decltype(std::begin(std::declval<T&>())),
+                                   decltype(std::end(std::declval<T&>())),
+                                   typename T::value_type>> : std::true_type {};
 
-// template <typename T>
-// inline constexpr bool is_container_v = is_container<T>::value;
+template <typename T>
+inline constexpr bool is_container_v = is_container<T>::value;
 
 // Contains function template
-// template <typename Container, typename T>
-// std::enable_if_t<is_container_v<Container>, bool> Contains(const Container&
-// c,
-//                                                            const T& value) {
-//   using element_type = typename Container::value_type;
-//   if constexpr (is_container_v<element_type>) {
-//     // Element type is a container, recurse into each element
-//     for (const auto& inner : c) {
-//       if (Contains(inner, value)) {
-//         return true;
-//       }
-//     }
-//     return false;
-//   } else {
-//     // Element type is not a container, use std::find directly
-//     return std::find(std::begin(c), std::end(c), value) != std::end(c);
-//   }
-// }
+template <typename Container, typename T>
+std::enable_if_t<is_container_v<Container>, bool> Contains(const Container& c,
+                                                           const T& value) {
+  using element_type = typename Container::value_type;
+  if constexpr (is_container_v<element_type>) {
+    // Element type is a container, recurse into each element
+    for (const auto& inner : c) {
+      if (Contains(inner, value)) {
+        return true;
+      }
+    }
+    return false;
+  } else {
+    // Element type is not a container, use std::find directly
+    return std::find(std::begin(c), std::end(c), value) != std::end(c);
+  }
+}
 
-// template <typename T>
-// void PrettyPrintVector(const std::vector<T>& vec) {
-//   fmt::print("[");
-//   for (size_t i = 0; i < vec.size(); ++i) {
-//     fmt::print("{}", vec[i]);
-//     if (i < vec.size() - 1) {
-//       fmt::print(", ");
-//     }
-//   }
-//   fmt::print("]\n");
-// }
+template <typename T>
+void PrettyPrintVector(const std::vector<T>& vec) {
+  std::print("[");
+  for (size_t i = 0; i < vec.size(); ++i) {
+    std::print("{}", vec[i]);
+    if (i < vec.size() - 1) {
+      std::print(", ");
+    }
+  }
+  std::print("]\n");
+}
 
 // Kind of goofy, so here is an explanation.
 // - This is a generic lambda  a lambda that takes a reference to a deduced type

@@ -25,7 +25,7 @@ So, in this situation, Comet would win (if the race ended at 1000 seconds).
 Given the descriptions of each reindeer (in your puzzle input), after exactly
 2503 seconds, what distance has the winning reindeer traveled?
 */
-#include <fmt/core.h>
+#include <print>
 
 #include <iostream>
 #include <regex>
@@ -102,13 +102,13 @@ int main() {
     for (auto& r : reindeer) {
       r.current_dist = ComputeDistAfterTime(r, i);
       max_dist = std::max(r.current_dist, max_dist);
-      fmt::print("At {}, {} is at distance {}!\n", i, r.name, r.current_dist);
+      std::print("At {}, {} is at distance {}!\n", i, r.name, r.current_dist);
       // std::cout << "Time: "
     }
     std::for_each(reindeer.begin(), reindeer.end(), [max_dist](Reindeer& r) {
       if (r.current_dist == max_dist) {
         r.AwardPoint();
-        fmt::print("Point awarded to {}! New total: {}.\n", r.name,
+        std::print("Point awarded to {}! New total: {}.\n", r.name,
                    r.point_total);
       }
     });

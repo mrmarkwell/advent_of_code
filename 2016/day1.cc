@@ -41,7 +41,7 @@ How many blocks away is the first location you visit twice?
 
 */
 
-#include <fmt/core.h>
+#include <print>
 
 #include <string>
 #include <string_view>
@@ -64,14 +64,14 @@ class Coordinate {
   void ApplyInstruction(std::string_view instruction) {
     if (instruction.empty()) {
       // Shouldn't happen.
-      fmt::print("ERROR: Empty instruction.\n");
+      std::print("ERROR: Empty instruction.\n");
       return;
     }
     Turn(instruction);
 
     CHECK_OK(Move(instruction));
 
-    fmt::print("{}, {}\n", x_, y_);
+    std::print("{}, {}\n", x_, y_);
   }
 
   int64_t DistanceFromOrigin() const { return x_ + y_; }
@@ -88,7 +88,7 @@ class Coordinate {
                                           kNumDirections);
       return;
     }
-    fmt::print("ERROR: Bad instruction? {}\n", instruction);
+    std::print("ERROR: Bad instruction? {}\n", instruction);
   }
 
   absl::Status Move(std::string_view instruction) {
@@ -137,7 +137,7 @@ int main() {
     coordinate.ApplyInstruction(instruction);
   }
 
-  fmt::print("Distance from origin: {}\n", coordinate.DistanceFromOrigin());
+  std::print("Distance from origin: {}\n", coordinate.DistanceFromOrigin());
 
   return 0;
 }

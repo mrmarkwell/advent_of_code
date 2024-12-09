@@ -56,15 +56,16 @@ What is the quantum entanglement of the first group of packages in the ideal
 configuration?
 */
 
-#include <fmt/core.h>
-
 #include <algorithm>
 #include <bitset>
 #include <cstdlib>
+#include <format>
 #include <functional>
 #include <numeric>
+#include <print>
 #include <unordered_set>
 #include <vector>
+
 constexpr int kSizeOfInput = 29;
 
 using Bitset = std::bitset<kSizeOfInput>;
@@ -75,7 +76,7 @@ void PrettyPrintSet(const std::unordered_set<int>& set) {
 
   // Iterate over the set and append elements to the result string
   for (auto it = set.begin(); it != set.end(); ++it) {
-    result += fmt::format("{}", *it);
+    result += std::format("{}", *it);
     if (std::next(it) != set.end()) {
       result += ", ";
     }
@@ -83,8 +84,8 @@ void PrettyPrintSet(const std::unordered_set<int>& set) {
 
   result += "}";
 
-  // Use fmt::print to print the formatted output
-  fmt::print("{}\n", result);
+  // Use std::print to print the formatted output
+  std::print("{}\n", result);
 }
 
 int Sum(const std::vector<int>& packages, const Bitset& selected) {
@@ -112,7 +113,7 @@ void FindSolution(const std::vector<int>& packages, int target,
                   std::unordered_set<int>& best) {
   // std::string dbg = selected.to_string();
   // std::reverse(dbg.begin(), dbg.end());
-  // fmt::print("Testing: {}\n", dbg);
+  // std::print("Testing: {}\n", dbg);
   int num_selected = selected.count();
   if (!best.empty() && num_selected > best.size()) {
     // We've already found a better solution.
@@ -127,7 +128,7 @@ void FindSolution(const std::vector<int>& packages, int target,
   if (weight == target) {
     if (best.empty() || num_selected < best.size()) {
       // we found a new best!
-      fmt::print("New best found, with only {} packages.\n", num_selected);
+      std::print("New best found, with only {} packages.\n", num_selected);
       best = GetSet(packages, selected);
       PrettyPrintSet(best);
     }
@@ -141,14 +142,14 @@ void FindSolution(const std::vector<int>& packages, int target,
                         std::multiplies<int64_t>());
     if (candidate_qe < best_qe) {
       // overwrite the best.
-      fmt::print(
+      std::print(
           "New best found, still with {} packages, but a lower qe: {} vs. "
           "{}.\n",
           num_selected, candidate_qe, best_qe);
       best = candidate_set;
       PrettyPrintSet(best);
     } else {
-      //      fmt::print(
+      //      std::print(
       //          "New tie found, still with {} packages, but a higher qe: {}
       //          vs. "
       //          "{}.\n",
@@ -196,7 +197,7 @@ int main() {
   int64_t best_qe = std::accumulate(best_solution.begin(), best_solution.end(),
                                     1l, std::multiplies<int64_t>());
 
-  fmt::print("Part 1 - Best QE: {}\n", best_qe);
+  std::print("Part 1 - Best QE: {}\n", best_qe);
 
   const int new_target_weight =
       std::accumulate(packages.begin(), packages.end(), 0) / 4;
@@ -209,7 +210,7 @@ int main() {
   best_qe = std::accumulate(best_solution.begin(), best_solution.end(), 1l,
                             std::multiplies<int64_t>());
 
-  fmt::print("Part 2 - Best QE: {}\n", best_qe);
+  std::print("Part 2 - Best QE: {}\n", best_qe);
 
   return 0;
 }

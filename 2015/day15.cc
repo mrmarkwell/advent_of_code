@@ -58,7 +58,7 @@ Given the ingredients in your kitchen and their properties, what is the total
 score of the highest-scoring cookie you can make with a calorie total of 500?
 */
 
-#include <fmt/core.h>
+#include <print>
 
 #include <cassert>
 #include <regex>
@@ -153,7 +153,7 @@ void TestCalculateScore() {
   test_recipe[0].tsp = 44;
   test_recipe[1].tsp = 56;
 
-  fmt::print("Test recipe score: {}\n", CalculateScore(test_recipe));
+  std::print("Test recipe score: {}\n", CalculateScore(test_recipe));
   assert(CalculateScore(test_recipe) == 62842880);
 }
 
@@ -198,7 +198,7 @@ int GetTheNastyHealthyMilkDunkingCookieRecipeScore(
         int old_score = best_score;
         best_score = std::max(best_score, CalculateScore(recipe, true));
         if (best_score != old_score) {
-          fmt::print("Found a new best score {}: {}, {}, {}, {}\n", best_score,
+          std::print("Found a new best score {}: {}, {}, {}, {}\n", best_score,
                      i, j, k, l);
         }
       }
@@ -218,15 +218,15 @@ void TestMakeThePerfectMilkDunkingCookieRecipe() {
   std::vector<IngredientAmount> test_recipe = GetIngredients(test_lines);
 
   for (auto ingredient_amount : test_recipe) {
-    fmt::print("{}\n", ingredient_amount.ingredient.name);
+    std::print("{}\n", ingredient_amount.ingredient.name);
   }
   MakeThePerfectMilkDunkingCookieRecipe(test_recipe);
 
   for (auto ingredient_amount : test_recipe) {
-    fmt::print("{}\n", ingredient_amount.ingredient.name);
+    std::print("{}\n", ingredient_amount.ingredient.name);
   }
 
-  fmt::print("We need {} tsps of {} and {} tsps of {}\n", test_recipe[0].tsp,
+  std::print("We need {} tsps of {} and {} tsps of {}\n", test_recipe[0].tsp,
              test_recipe[0].ingredient.name, test_recipe[1].tsp,
              test_recipe[1].ingredient.name);
   assert(test_recipe[0].tsp == 44 && test_recipe[1].tsp == 56);
@@ -247,12 +247,12 @@ int main() {
   MakeThePerfectMilkDunkingCookieRecipe(recipe);
   int score = CalculateScore(recipe);
 
-  fmt::print("The score for the perfect milk dunking cookie recipe is {}\n",
+  std::print("The score for the perfect milk dunking cookie recipe is {}\n",
              score);
 
   int new_score = GetTheNastyHealthyMilkDunkingCookieRecipeScore(recipe);
 
-  fmt::print("The new healthy nasty milk dunking cookie recipe score is {}\n",
+  std::print("The new healthy nasty milk dunking cookie recipe score is {}\n",
              new_score);
 
   return 0;

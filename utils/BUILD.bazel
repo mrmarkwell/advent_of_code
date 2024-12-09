@@ -9,6 +9,5 @@ cc_library(
     deps = [
         "@abseil-cpp//absl/log:check",
         "@abseil-cpp//absl/status:statusor",
-        "@fmt",
     ],
 )

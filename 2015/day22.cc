@@ -130,7 +130,7 @@ You start with 50 hit points and 500 mana points. The boss's actual stats are in
 your puzzle input. What is the least amount of mana you can spend and still win
 the fight? (Do not include mana recharge effects as "spending" negative mana.)
 */
-#include <fmt/core.h>
+#include <print>
 
 #include <algorithm>
 #include <cstdlib>
@@ -185,12 +185,12 @@ void PrettyPrintSpellList(const std::vector<SpellType>& spells) {
   bool first = true;
   for (const auto& spell : spells) {
     if (!first) {
-      fmt::print(", ");
+      std::print(", ");
     }
-    fmt::print("{}", ToString(spell));
+    std::print("{}", ToString(spell));
     first = false;
   }
-  fmt::print("\n");
+  std::print("\n");
 }
 struct Spell {
   int turns_remaining = 0;
@@ -275,10 +275,10 @@ struct GameState {
     mana_spent += spell.mana_cost;
     wizard.mana -= spell.mana_cost;
     if (wizard.mana < 0) {
-      fmt::print("Error!! Spell: {}\n", ToString(spell.type));
+      std::print("Error!! Spell: {}\n", ToString(spell.type));
       std::exit(0);
     }
-    // fmt::print("Cast spell {}. Remaining mana: {}\n", ToString(spell.type),
+    // std::print("Cast spell {}. Remaining mana: {}\n", ToString(spell.type),
     //            wizard.mana);
     spells_cast.push_back(spell.type);
     // Some spells are immediate.
@@ -300,7 +300,7 @@ struct GameState {
       int old_mana_spent = min_mana_spent;
       min_mana_spent = std::min(min_mana_spent, mana_spent);
       if (min_mana_spent != old_mana_spent) {
-        fmt::print("Found a new best strategy! Mana spent: {}\n",
+        std::print("Found a new best strategy! Mana spent: {}\n",
                    min_mana_spent);
         PrettyPrintSpellList(spells_cast);
       }
@@ -353,6 +353,6 @@ int main() {
   TakeGameTurn(GameState{}, min_mana_spent);
   int hard_mode_min_mana_spent = std::numeric_limits<int>::max();
   TakeGameTurn(GameState{}, hard_mode_min_mana_spent, /*hard_mode=*/true);
-  fmt::print("Part 1: {} Part 2: {}\n", min_mana_spent,
+  std::print("Part 1: {} Part 2: {}\n", min_mana_spent,
              hard_mode_min_mana_spent);
 }

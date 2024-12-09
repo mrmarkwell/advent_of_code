@@ -31,10 +31,8 @@ In the example above, the minimum number of containers was two. There were three
 ways to use that many containers, and so the answer there would be 3.
 */
 
-#include <fmt/core.h>
-#include <fmt/ranges.h>
-
 #include <cassert>
+#include <print>
 
 #include "utils/utils.h"
 
@@ -47,10 +45,6 @@ std::vector<int> LoadData() {
     jugs.push_back(std::stoi(line));
   }
   return jugs;
-}
-
-void PrettyPrintJugs(const std::vector<int>& vec) {
-  fmt::print("Jugs: [{}]\n", fmt::join(vec, ", "), "\n");
 }
 
 void FindJugCombinations(std::vector<int> unused_jugs, int remaining_eggnog,
@@ -94,7 +88,7 @@ void TestPart1() {
   FindJugCombinations(test_values, 25, used_jugs, min_jugs_used,
                       num_of_combinations);
   assert(num_of_combinations == 4);
-  // fmt::print("Test1: {}\n", num_of_combinations);
+  // std::print("Test1: {}\n", num_of_combinations);
 }
 
 void TestPart2() {
@@ -104,7 +98,7 @@ void TestPart2() {
   int used_jugs = 0;
   FindJugCombinations(test_values, 25, used_jugs, min_used_jugs,
                       num_of_combinations, true);
-  // fmt::print("Test2: {}\n", num_of_combinations);
+  // std::print("Test2: {}\n", num_of_combinations);
   assert(num_of_combinations == 3);
 }
 
@@ -116,14 +110,14 @@ int main() {
   constexpr int used_jugs = 0;
   FindJugCombinations(jugs, 150, used_jugs, min_used_jugs, combinations);
 
-  fmt::print("There are {} valid combinations.\n", combinations);
+  std::print("There are {} valid combinations.\n", combinations);
 
   TestPart2();
   combinations = 0;
   min_used_jugs = jugs.size();
   FindJugCombinations(jugs, 150, used_jugs, min_used_jugs, combinations, true);
 
-  fmt::print(
+  std::print(
       "There are {} different ways to send {} jugs to shipping and "
       "recieving.\n",
       combinations, min_used_jugs);

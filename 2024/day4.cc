@@ -82,7 +82,7 @@ try again. How many times does an X-MAS appear?
 #include <cstdlib>
 
 #include "absl/log/check.h"
-#include "fmt/core.h"
+#include <print>
 #include "utils/utils.h"
 
 struct Coordinate {
@@ -107,7 +107,7 @@ bool CheckForMas(const std::vector<std::string>& grid, Coordinate current,
   for (char c : std::string("MAS")) {
     current.x += x_step;
     current.y += y_step;
-    // fmt::print("Checking for {} at row {}, col {}. Invalid? {}\n", c,
+    // std::print("Checking for {} at row {}, col {}. Invalid? {}\n", c,
     // current.y, current.x, IsInvalid(current));
     if (IsInvalid(current) || grid[current.y][current.x] != c) {
       return false;
@@ -125,7 +125,7 @@ int32_t CountXmasFromX(const std::vector<std::string>& grid, Coordinate start) {
     return 0;
   }
 
-  // fmt::print("Found an X at row {}, col {}\n", start.y, start.x);
+  // std::print("Found an X at row {}, col {}\n", start.y, start.x);
 
   int32_t count = 0;
 
@@ -192,6 +192,6 @@ int main() {
       total_part2 += CountMasInAnXShape(grid, {x, y});
     }
   }
-  fmt::print("The total is: {}\n", total);
-  fmt::print("The part 2 total is: {}\n", total_part2);
+  std::print("The total is: {}\n", total);
+  std::print("The part 2 total is: {}\n", total_part2);
 }

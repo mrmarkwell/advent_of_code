@@ -79,7 +79,7 @@ sits at the bottom, awaiting its friends. Looks like you need to provide 49
 yourself.
 */
 
-#include <fmt/core.h>
+#include <print>
 
 #include <cassert>
 #include <cstdlib>
@@ -135,7 +135,7 @@ int64_t GetCode(int64_t row, int64_t col) {
   int64_t idx = GetIndex(row, col);
   for (int64_t i = 2; i <= idx; ++i) {
     value = (value * 252533) % 33554393;
-    // fmt::print("{} : {}\n", i, value);
+    // std::print("{} : {}\n", i, value);
   }
   return value;
 }
@@ -161,7 +161,7 @@ int main() {
   assert(GetCode(2, 1) == 31916031);
   assert(GetCode(4, 3) == 21345942);
 
-  fmt::print("The answer is {}\n", GetCode(kRow, kCol));
+  std::print("The answer is {}\n", GetCode(kRow, kCol));
 
   return 0;
 }

@@ -129,7 +129,6 @@ cc_binary(
     data = ["day14.txt"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -139,7 +138,6 @@ cc_binary(
     data = ["day15.txt"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -149,7 +147,6 @@ cc_binary(
     data = ["day16.txt"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -159,7 +156,6 @@ cc_binary(
     data = ["day17.txt"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -169,7 +165,6 @@ cc_binary(
     data = ["day18.txt"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -179,7 +174,6 @@ cc_binary(
     data = ["day19.txt"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -188,7 +182,6 @@ cc_binary(
     srcs = ["day20.cc"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -197,7 +190,6 @@ cc_binary(
     srcs = ["day21.cc"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -206,7 +198,6 @@ cc_binary(
     srcs = ["day22.cc"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -216,7 +207,6 @@ cc_binary(
     data = ["day23.txt"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -225,7 +215,6 @@ cc_binary(
     srcs = ["day24.cc"],
     deps = [
         "//utils",
-        "@fmt",
     ],
 )
 
@@ -235,6 +224,5 @@ cc_binary(
     deps = [
         "//utils",
         "@abseil-cpp//absl/container:flat_hash_map",
-        "@fmt",
     ],
 )

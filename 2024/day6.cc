@@ -220,7 +220,7 @@ How many different positions could you choose for this obstruction?
 #include "absl/container/flat_hash_map.h"
 #include "absl/container/flat_hash_set.h"
 #include "absl/log/check.h"
-#include "fmt/core.h"
+#include <print>
 #include "utils/utils.h"
 
 using ::aoc::Coordinate;
@@ -283,7 +283,7 @@ class Map {
       Coordinate next_coordinate = test_map.NextCoordinate();
 
       potential_loop_path[next_coordinate]++;
-      // fmt::print("Next: {}, {}\n", next_coordinate.row, next_coordinate.col);
+      // std::print("Next: {}, {}\n", next_coordinate.row, next_coordinate.col);
       // TODO: None of my ideas here work. I need to figure out how to determine
       // if there is a loop or not correctly.
       if (potential_loop_path[next_coordinate] > 100) {
@@ -292,14 +292,14 @@ class Map {
         //  We returned to this obstacle while going the same direction as when
         //  we placed it. We've created a loop.
         loop_creating_obstacles_.insert(candidate);
-        fmt::print("loop_creating_obstacles_.size(): {}\n",
+        std::print("loop_creating_obstacles_.size(): {}\n",
                    loop_creating_obstacles_.size());
 
         // Print it out so we can confirm it works.
-        // fmt::print("\nFound Loop Obstacle:\n");
+        // std::print("\nFound Loop Obstacle:\n");
         // test_map.SetChar(candidate, 'O');
         // test_map.Print();
-        // fmt::print("\n\n");
+        // std::print("\n\n");
         return true;
       }
     }
@@ -319,10 +319,10 @@ class Map {
 
     Coordinate next = NextCoordinate();
 
-    // fmt::print("Next row: {} col: {}\n", next.row, next.col);
+    // std::print("Next row: {} col: {}\n", next.row, next.col);
 
     if (OutOfBounds(next)) {
-      // fmt::print("OOB\n");
+      // std::print("OOB\n");
       //  Visit the current location and remove the guard from the map.
       SetChar(*guard_, kVisited);
       guard_ = std::nullopt;
@@ -330,14 +330,14 @@ class Map {
     }
     char next_char = GetChar(next);
     if (next_char == kEmpty || next_char == kVisited) {
-      // fmt::print("Empty\n");
+      // std::print("Empty\n");
       //  Move the guard coordinate to the next one, and move the guard.
       SetChar(*guard_, kVisited);
       SetChar(next, g);
       guard_ = next;
     }
     if (next_char == kObstacle) {
-      //  fmt::print("Obstacle\n");
+      //  std::print("Obstacle\n");
       // Turn right only. We won't visit anything this time step.
       TurnRight();
     }
@@ -353,7 +353,7 @@ class Map {
 
   void Print() {
     for (std::string_view row : map_) {
-      fmt::print("{}\n", row);
+      std::print("{}\n", row);
     }
   }
 
@@ -404,16 +404,16 @@ int main() {
   int count_loop_obstacles = 0;
 
   while (map.HasGuard()) {
-    // fmt::print("Step!\n");
+    // std::print("Step!\n");
     map.Tick();
     static int count = 0;
-    fmt::print("Step {}================================\n", ++count);
+    std::print("Step {}================================\n", ++count);
     if (map.NextObstacleCreatesLoop()) {
       ++count_loop_obstacles;
     }
     // map.Print();
   }
   map.Print();
-  fmt::print("Total Visited: {}\n", map.CountVisited());
-  fmt::print("Loop Obstacles Added: {}\n", count_loop_obstacles);
+  std::print("Total Visited: {}\n", map.CountVisited());
+  std::print("Loop Obstacles Added: {}\n", count_loop_obstacles);
 }

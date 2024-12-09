@@ -1,4 +1,4 @@
-#include <fmt/core.h>
+#include <print>
 
 #include <regex>
 #include <unordered_map>
@@ -11,14 +11,14 @@ void PrintAuntClues(
     const std::vector<std::unordered_map<std::string, int>>& aunt_clues) {
   int aunt_number = 1;
   for (const auto& aunt : aunt_clues) {
-    fmt::print("Aunt {}: {{", aunt_number);
+    std::print("Aunt {}: {{", aunt_number);
     for (auto it = aunt.begin(); it != aunt.end(); ++it) {
-      fmt::print("{}: {}", it->first, it->second);
+      std::print("{}: {}", it->first, it->second);
       if (std::next(it) != aunt.end()) {
-        fmt::print(", ");
+        std::print(", ");
       }
     }
-    fmt::print("}}\n");
+    std::print("}}\n");
     aunt_number++;
   }
 }
@@ -123,7 +123,7 @@ int main() {
   int correct_aunt =
       HireSherlockHolmesToDeduceWhichAuntMyGiftIsFrom(aunt_clues);
 
-  fmt::print(
+  std::print(
       "I, Sherlock Holmes have deduced that Aunt Sue {} sent you your awesome "
       "present!\n",
       correct_aunt);
@@ -132,7 +132,7 @@ int main() {
       ProvideSherlockHolmesWithTheNewEvidenceSoHeCanReevaluateTheCase(
           aunt_clues);
 
-  fmt::print(
+  std::print(
       "After recieving your email regarding the new evidence, I concluded that "
       "Aunt Sue {} sent you your present.\n",
       correct_aunt);

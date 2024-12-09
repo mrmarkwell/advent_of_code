@@ -69,7 +69,7 @@ How long will it take to make the medicine? Given the available replacements and
 the medicine molecule in your puzzle input, what is the fewest number of steps
 to go from e to the medicine molecule?
 */
-#include <fmt/core.h>
+#include <print>
 
 #include <map>
 #include <regex>
@@ -115,7 +115,7 @@ int CountUniqueMolecules(
       new_molecule.replace(start_pos, key.length(), value);
       start_pos++;
       unique_molecules.insert(new_molecule);
-      // fmt::print("K: {} V: {} M: {}\n", key, value, new_molecule);
+      // std::print("K: {} V: {} M: {}\n", key, value, new_molecule);
     }
   }
 
@@ -161,7 +161,7 @@ int main() {
   std::string molecule = lines.back();
   std::multimap<std::string, std::string> substitutions =
       GetSubstitutions(lines);
-  fmt::print("Unique Molecules: {}",
+  std::print("Unique Molecules: {}",
              CountUniqueMolecules(molecule, substitutions));
 
   // Make a reverse substitution map.
@@ -178,7 +178,7 @@ int main() {
     for (const auto& [key, value] : reverse_map) {
       if (ReplaceFirstOccurrenceInPlace(molecule_cord, key, value)) {
         steps++;
-        fmt::print("{}: {}\n", steps, molecule_cord.Flatten());
+        std::print("{}: {}\n", steps, molecule_cord.Flatten());
       }
     }
   }

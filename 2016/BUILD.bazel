@@ -4,6 +4,5 @@ cc_binary(
     deps = [
         "//utils",
         "@abseil-cpp//absl/log:check",
-        "@fmt",
     ],
 )
