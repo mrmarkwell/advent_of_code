@@ -145,4 +145,6 @@ absl::StatusOr<int64_t> ConvertStringViewToInt64(std::string_view input) {
   return result;
 }
 
+int ConvertCharToInt(char c) { return c - '0'; }
+
 }  // namespace aoc

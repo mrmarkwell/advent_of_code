@@ -14,7 +14,6 @@ namespace aoc {
 // Quick macro to print a variable when debugging.
 // Usage: PRINT(foo);
 #define PRINT(var) std::print(#var ": {}\n", var)
-
 // // Hashable, equality comparable Coordinate.
 // // This coordinate denotes rows and columns rather than x and y. The meaning
 // of
@@ -93,6 +92,23 @@ std::enable_if_t<is_container_v<Container>, bool> Contains(const Container& c,
   }
 }
 
+inline Coordinate GoDown(Coordinate c) {
+  ++c.row;
+  return c;
+}
+inline Coordinate GoUp(Coordinate c) {
+  --c.row;
+  return c;
+}
+inline Coordinate GoLeft(Coordinate c) {
+  --c.col;
+  return c;
+}
+inline Coordinate GoRight(Coordinate c) {
+  ++c.col;
+  return c;
+}
+
 template <typename T>
 void PrettyPrintVector(const std::vector<T>& vec) {
   std::print("[");
@@ -168,5 +184,8 @@ std::vector<std::string> SplitDelimitedString(std::string_view input,
 
 // Converts an input string into an integer or returns a failing status.
 absl::StatusOr<int64_t> ConvertStringViewToInt64(std::string_view input);
+
+// Convert a char to an int. WARNING: No error checking.
+int ConvertCharToInt(char c);
 
 }  // namespace aoc

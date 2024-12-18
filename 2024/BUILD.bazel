@@ -60,3 +60,14 @@ cc_binary(
     ],
 )
 
+cc_binary(
+    name = "day10",
+    srcs = ["day10.cc"],
+    data = ["day10.txt"],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/container:flat_hash_set",
+        "@abseil-cpp//absl/log:check",
+    ],
+)
