@@ -18,11 +18,11 @@ cc_binary(
 )
 
 cc_binary(
-   name = "day3",
+    name = "day3",
     srcs = ["day3.cc"],
     data = ["day3.txt"],
     deps = [
-        "//utils", 
+        "//utils",
     ],
 )
 
@@ -42,8 +42,21 @@ cc_binary(
     data = ["day6.txt"],
     deps = [
         "//utils",
-        "@abseil-cpp//absl/log:check",
-        "@abseil-cpp//absl/container:flat_hash_set",
         "@abseil-cpp//absl/container:flat_hash_map",
-    ]
+        "@abseil-cpp//absl/container:flat_hash_set",
+        "@abseil-cpp//absl/log:check",
+    ],
 )
+
+cc_binary(
+    name = "day8",
+    srcs = ["day8.cc"],
+    data = ["day8.txt"],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/container:flat_hash_set",
+        "@abseil-cpp//absl/log:check",
+    ],
+)
+
