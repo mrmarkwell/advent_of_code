@@ -216,11 +216,11 @@ How many different positions could you choose for this obstruction?
 
 */
 #include <cstdlib>
+#include <print>
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/container/flat_hash_set.h"
 #include "absl/log/check.h"
-#include <print>
 #include "utils/utils.h"
 
 using ::aoc::Coordinate;
@@ -237,6 +237,9 @@ class Map {
       if (col != std::string::npos) {
         // We found the guard! Mark his position.
         guard_ = {row, static_cast<int>(col)};
+
+        // Track the starting position as well.
+        guard_starting_position_ = *guard_;
         break;
       }
     }
@@ -255,24 +258,53 @@ class Map {
     if (!HasGuard()) return false;
     Coordinate candidate = NextCoordinate();
 
+    if (candidate == guard_starting_position_) {
+      // An obstacle is not allowed here.
+      std::print("No obstacle allowed here!==-----------------------------\n");
+      return false;
+    }
+
     // We've already tried an obstacle at this exact spot and found that it
     // creates a different loop.
-    if (loop_creating_obstacles_.contains(candidate)) return false;
+    // NOTE: this was a bug. We should never be in this situation since we can't
+    // run into an obstacle from a different direction (we would hit it from the
+    // first direction and then mark it as Visited, meaning we can never try it
+    // again.)
+    // if (loop_creating_obstacles_.contains(candidate)) {
+    //  return false;
+    // }
 
     // We can't place an obstacle out of bounds.
-    if (OutOfBounds(candidate)) return false;
+    if (OutOfBounds(candidate)) {
+      return false;
+    }
+
     char candidate_char = GetChar(candidate);
 
-    // We can't place an obstacle on an obstacle.
-    if (candidate_char == kObstacle) return false;
+    // this is where I had a bug for a long time. The candidate must be EMPTY.
+    // We can't place an opstacle on a kVisited position, since that means we
+    // would have run into the obstacle already from a different direction.
+    // D'oh!
+    // This LOC being `if (candidate_char == kObstacle)` cost me a lot of time.
+    if (candidate_char != kEmpty) {
+      return false;
+    }
 
     // Create a copy of the map up to this point.
     Map test_map{map_};
 
     // Make the next spot an obstacle in the map.
     test_map.SetChar(candidate, kObstacle);
+    //
+    // std::print(
+    //     "Current guard and location: {} at {}, {}. Placing an obstacle at {},
+    //     "
+    //     "{}\n",
+    //     test_map.GetGuardChar(), test_map.CurrentPosition().row,
+    //     test_map.CurrentPosition().col, candidate.row, candidate.col);
 
-    absl::flat_hash_map<Coordinate, int> potential_loop_path{};
+    using CoordinateAndGuardChar = std::pair<Coordinate, char>;
+    absl::flat_hash_set<CoordinateAndGuardChar> potential_loop_path{};
     while (true) {
       test_map.Tick();
       if (!test_map.HasGuard()) {
@@ -282,28 +314,33 @@ class Map {
 
       Coordinate next_coordinate = test_map.NextCoordinate();
 
-      potential_loop_path[next_coordinate]++;
-      // std::print("Next: {}, {}\n", next_coordinate.row, next_coordinate.col);
-      // TODO: None of my ideas here work. I need to figure out how to determine
-      // if there is a loop or not correctly.
-      if (potential_loop_path[next_coordinate] > 100) {
+      // This is where we are now and the direction we're facing.
+      CoordinateAndGuardChar coordinate_and_guard_char = {
+          next_coordinate, test_map.GetGuardChar()};
+      // std::print("Next: {} at {}, {}\n", coordinate_and_guard_char.second,
+      //            next_coordinate.row, next_coordinate.col);
+      // We haven't seen this exact position and direction yet.
+      if (potential_loop_path.contains(coordinate_and_guard_char)) {
         // if (test_map.NextCoordinate() == candidate &&
-        //     test_map.GetGuardChar() == GetGuardChar()) {
-        //  We returned to this obstacle while going the same direction as when
-        //  we placed it. We've created a loop.
-        loop_creating_obstacles_.insert(candidate);
-        std::print("loop_creating_obstacles_.size(): {}\n",
-                   loop_creating_obstacles_.size());
+        //    test_map.GetGuardChar() == GetGuardChar()) {
+        //   We returned to this obstacle while going the same direction as
+        //   when we placed it. We've created a loop.
+        //  loop_creating_obstacles_.insert(candidate);
+        // std::print("loop_creating_obstacles_.size(): {}\n",
+        //            loop_creating_obstacles_.size());
 
         // Print it out so we can confirm it works.
-        // std::print("\nFound Loop Obstacle:\n");
+        std::print("Found Loop Obstacle!\n");
         // test_map.SetChar(candidate, 'O');
         // test_map.Print();
         // std::print("\n\n");
         return true;
       }
+      // Add this position and direction to the set.
+      potential_loop_path.insert(coordinate_and_guard_char);
     }
-    return true;
+    // Unreachable.
+    return false;
   }
 
   char GetGuardChar() const { return GetChar(*guard_); }
@@ -314,7 +351,7 @@ class Map {
       // Nothing to do.
       return;
     }
-    char g = GetChar(*guard_);
+    char g = GetGuardChar();
     CHECK(g != kVisited) << "Shouldn't be possible???";
 
     Coordinate next = NextCoordinate();
@@ -357,6 +394,17 @@ class Map {
     }
   }
 
+  Coordinate CurrentPosition() const { return *guard_; }
+  Coordinate NextCoordinate() const {
+    Coordinate next = *guard_;
+    char guard_char = GetChar(next);
+    if (guard_char == '^') next.row--;
+    if (guard_char == '>') next.col++;
+    if (guard_char == 'v') next.row++;
+    if (guard_char == '<') next.col--;
+    return next;
+  }
+
  private:
   void TurnRight() {
     char guard_char = GetChar(*guard_);
@@ -376,16 +424,6 @@ class Map {
     }
   }
 
-  Coordinate NextCoordinate() const {
-    Coordinate next = *guard_;
-    char guard_char = GetChar(next);
-    if (guard_char == '^') next.row--;
-    if (guard_char == '>') next.col++;
-    if (guard_char == 'v') next.row++;
-    if (guard_char == '<') next.col--;
-    return next;
-  }
-
   bool OutOfBounds(Coordinate c) const {
     bool in_bounds = c.row >= 0 && c.row < map_.size() && c.col >= 0 &&
                      c.col < map_.front().size();
@@ -393,9 +431,10 @@ class Map {
   }
   void SetChar(Coordinate c, char val) { map_[c.row][c.col] = val; }
   char GetChar(Coordinate c) const { return map_[c.row][c.col]; }
+  Coordinate guard_starting_position_;
   std::vector<std::string> map_;
   std::optional<Coordinate> guard_;
-  absl::flat_hash_set<Coordinate> loop_creating_obstacles_;
+  // absl::flat_hash_set<Coordinate> loop_creating_obstacles_;
 };
 
 int main() {
