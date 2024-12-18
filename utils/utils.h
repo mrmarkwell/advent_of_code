@@ -1,4 +1,5 @@
 #pragma once
+#include <format>
 #include <numeric>
 #include <print>
 #include <regex>
@@ -7,7 +8,6 @@
 #include <vector>
 
 #include "absl/status/statusor.h"
-// #include "<print>"
 
 namespace aoc {
 
@@ -26,6 +26,33 @@ struct Coordinate {
   bool operator==(const Coordinate& other) const {
     return row == other.row && col == other.col;
   }
+  // Addition operator
+  Coordinate operator+(const Coordinate& other) const {
+    return {row + other.row, col + other.col};
+  }
+
+  // Subtraction operator
+  Coordinate operator-(const Coordinate& other) const {
+    return {row - other.row, col - other.col};
+  }
+
+  // Addition assignment operator
+  Coordinate& operator+=(const Coordinate& other) {
+    row += other.row;
+    col += other.col;
+    return *this;
+  }
+
+  // Subtraction assignment operator
+  Coordinate& operator-=(const Coordinate& other) {
+    row -= other.row;
+    col -= other.col;
+    return *this;
+  }
+
+  std::string ToString() const { return std::format("{{{}, {}}}", row, col); }
+  void Print() const { std::print("{}\n", ToString()); }
+
   template <typename H>
   friend H AbslHashValue(H h, const Coordinate& m);
 };
