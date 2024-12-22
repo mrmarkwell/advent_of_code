@@ -71,3 +71,18 @@ cc_binary(
         "@abseil-cpp//absl/log:check",
     ],
 )
+
+cc_binary(
+    name = "day12",
+    srcs = ["day12.cc"],
+    data = [
+        "day12.txt",
+        "day12example.txt",
+    ],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/container:flat_hash_set",
+        "@abseil-cpp//absl/log:check",
+    ],
+)

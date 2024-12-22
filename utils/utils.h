@@ -20,7 +20,7 @@ namespace aoc {
 // 'row' and 'col' can be determined by the client code.
 struct Coordinate {
   int row{0};
-  int col{0};
+  int64_t col{0};
 
   bool operator==(const Coordinate& other) const {
     return row == other.row && col == other.col;
@@ -60,6 +60,101 @@ template <typename H>
 H AbslHashValue(H h, const Coordinate& m) {
   return H::combine(std::move(h), m.row, m.col);
 }
+
+// Convert a char to an int64_t. WARNING: No error checking.
+int64_t ConvertCharToInt(char c);
+
+class VisitedMap {
+ public:
+  // Constructor to initialize the map with given dimensions.
+  // Defaults to all cells unvisited (false).
+  VisitedMap(int rows, int cols)
+      : visited_(rows, std::vector<bool>(cols, false)) {}
+
+  // Marks a cell as visited.
+  bool MarkVisited(int row, int col) {
+    if (IsOutOfBounds(row, col)) {
+      return false;
+    }
+    visited_[row][col] = true;
+    return true;
+  }
+
+  // Marks a cell as unvisited.
+  bool MarkUnvisited(int row, int col) {
+    if (IsOutOfBounds(row, col)) {
+      return false;
+    }
+    visited_[row][col] = false;
+    return true;
+  }
+
+  // Checks if a cell has been visited.
+  bool IsVisited(int row, int col) const {
+    if (IsOutOfBounds(row, col)) {
+      return false;
+    }
+    return visited_[row][col];
+  }
+
+  // Resets the entire map to unvisited.
+  void Reset() {
+    for (auto& row : visited_) {
+      std::fill(row.begin(), row.end(), false);
+    }
+  }
+
+  // Gets the number of rows in the map.
+  int NumRows() const { return static_cast<int>(visited_.size()); }
+
+  // Gets the number of columns in the map.
+  int NumCols() const {
+    return NumRows() > 0 ? static_cast<int>(visited_[0].size()) : 0;
+  }
+
+ private:
+  // Checks if the given cell is out of bounds.
+  bool IsOutOfBounds(int row, int col) const {
+    return row < 0 || row >= NumRows() || col < 0 || col >= NumCols();
+  }
+
+  std::vector<std::vector<bool>>
+      visited_;  // 2D grid to store visitation states.
+};
+
+// A rectangular grid of strings, with some helper functions.
+class Map {
+ public:
+  explicit Map(std::vector<std::string> map) : map_(std::move(map)) {}
+
+  void Print() {
+    std::print("\n");
+    for (std::string_view row : map_) {
+      std::print("{}\n", row);
+    }
+    std::print("\n");
+  }
+
+  bool IsOutOfBounds(Coordinate c) const {
+    bool in_bounds =
+        c.row >= 0 && c.row < NumRows() && c.col >= 0 && c.col < NumCols();
+
+    return !in_bounds;
+  }
+
+  char GetChar(Coordinate c) const { return map_[c.row][c.col]; }
+  void SetChar(Coordinate c, char val) { map_[c.row][c.col] = val; }
+  bool CharEquals(Coordinate c, char val) { return map_[c.row][c.col] == val; }
+  // Only do this if the char is an int64_t.
+  int64_t GetInt(Coordinate c) const {
+    return ::aoc::ConvertCharToInt(GetChar(c));
+  }
+  int64_t NumRows() const { return map_.size(); }
+  int64_t NumCols() const { return map_.front().size(); }
+
+ private:
+  std::vector<std::string> map_;
+};
 
 // Trait to detect if a type is a container
 template <typename, typename = void>
@@ -184,8 +279,5 @@ std::vector<std::string> SplitDelimitedString(std::string_view input,
 
 // Converts an input string into an integer or returns a failing status.
 absl::StatusOr<int64_t> ConvertStringViewToInt64(std::string_view input);
-
-// Convert a char to an int. WARNING: No error checking.
-int ConvertCharToInt(char c);
 
 }  // namespace aoc
