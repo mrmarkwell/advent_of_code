@@ -25,6 +25,7 @@ struct Coordinate {
   bool operator==(const Coordinate& other) const {
     return row == other.row && col == other.col;
   }
+
   // Addition operator
   Coordinate operator+(const Coordinate& other) const {
     return {row + other.row, col + other.col};
@@ -72,29 +73,29 @@ class VisitedMap {
       : visited_(rows, std::vector<bool>(cols, false)) {}
 
   // Marks a cell as visited.
-  bool MarkVisited(int row, int col) {
-    if (IsOutOfBounds(row, col)) {
+  bool MarkVisited(Coordinate c) {
+    if (IsOutOfBounds(c)) {
       return false;
     }
-    visited_[row][col] = true;
+    visited_[c.row][c.col] = true;
     return true;
   }
 
   // Marks a cell as unvisited.
-  bool MarkUnvisited(int row, int col) {
-    if (IsOutOfBounds(row, col)) {
+  bool MarkUnvisited(Coordinate c) {
+    if (IsOutOfBounds(c)) {
       return false;
     }
-    visited_[row][col] = false;
+    visited_[c.row][c.col] = false;
     return true;
   }
 
   // Checks if a cell has been visited.
-  bool IsVisited(int row, int col) const {
-    if (IsOutOfBounds(row, col)) {
+  bool IsVisited(Coordinate c) const {
+    if (IsOutOfBounds(c)) {
       return false;
     }
-    return visited_[row][col];
+    return visited_[c.row][c.col];
   }
 
   // Resets the entire map to unvisited.
@@ -112,12 +113,12 @@ class VisitedMap {
     return NumRows() > 0 ? static_cast<int>(visited_[0].size()) : 0;
   }
 
- private:
   // Checks if the given cell is out of bounds.
-  bool IsOutOfBounds(int row, int col) const {
-    return row < 0 || row >= NumRows() || col < 0 || col >= NumCols();
+  bool IsOutOfBounds(Coordinate c) const {
+    return c.row < 0 || c.row >= NumRows() || c.col < 0 || c.col >= NumCols();
   }
 
+ private:
   std::vector<std::vector<bool>>
       visited_;  // 2D grid to store visitation states.
 };

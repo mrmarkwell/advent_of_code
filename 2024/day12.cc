@@ -119,15 +119,71 @@ What is the total price of fencing all regions on your map?
 #include "utils/utils.h"
 
 using ::aoc::Coordinate;
+using ::aoc::GoDown;
+using ::aoc::GoLeft;
+using ::aoc::GoRight;
+using ::aoc::GoUp;
 using ::aoc::Map;
 using ::aoc::VisitedMap;
 
+struct Region {
+  int64_t area{0};
+  int64_t perimeter{0};
+
+  Region operator+(const Region& other) const {
+    return {area + other.area, perimeter + other.perimeter};
+  };
+};
+
+void ComputeRegion(const Map& map, VisitedMap& visited, Region& region,
+                   char region_char, Coordinate current) {
+  // OOB - this is a perimeter edge.
+  if (map.IsOutOfBounds(current)) {
+    region.perimeter++;
+    return;
+  }
+  // Wrong char. This is a perimeter edge.
+  if (map.GetChar(current) != region_char) {
+    region.perimeter++;
+    return;
+  }
+  // visited. Do nothing.
+  if (visited.IsVisited(current)) {
+    return;
+  }
+  // Otherwise, this is a part of the region.
+  // Mark it as visited and include it in the area, and recurse.
+  region.area++;
+  visited.MarkVisited(current);
+
+  ComputeRegion(map, visited, region, region_char, GoUp(current));
+  ComputeRegion(map, visited, region, region_char, GoRight(current));
+  ComputeRegion(map, visited, region, region_char, GoLeft(current));
+  ComputeRegion(map, visited, region, region_char, GoDown(current));
+
+  return;
+}
+
 int64_t RegionPrice(const Map& map, VisitedMap& visited, Coordinate start) {
-  return 0;
+  // If visited, return 0.
+  if (visited.IsVisited(start)) {
+    return 0;
+  }
+
+  // This is an uncomputed region. Compute it.
+  char region_char = map.GetChar(start);
+  Region region;
+  ComputeRegion(map, visited, region, region_char, start);
+
+  std::print("Region {} starting at {} is {} area, {} perimeter\n", region_char,
+             start.ToString(), region.area, region.perimeter);
+
+  return region.area * region.perimeter;
 }
 
 int main() {
-  Map map(aoc::LoadStringsFromFileByLine("./2024/day12example.txt"));
+  // Map map(aoc::LoadStringsFromFileByLine("./2024/day12example.txt"));
+  Map map(aoc::LoadStringsFromFileByLine("./2024/day12.txt"));
 
   VisitedMap visited(map.NumRows(), map.NumCols());
 
