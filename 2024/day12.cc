@@ -119,6 +119,7 @@ What is the total price of fencing all regions on your map?
 #include "utils/utils.h"
 
 using ::aoc::Coordinate;
+using ::aoc::Direction;
 using ::aoc::GoDown;
 using ::aoc::GoLeft;
 using ::aoc::GoRight;
@@ -129,11 +130,44 @@ using ::aoc::VisitedMap;
 struct Region {
   int64_t area{0};
   int64_t perimeter{0};
+  int64_t sides{0};
 
   Region operator+(const Region& other) const {
     return {area + other.area, perimeter + other.perimeter};
   };
 };
+
+// Implement the algorithm described in the comment below.
+int64_t CountCorner(const Map& map, VisitedMap& visited, char character,
+                    Coordinate side_a, Coordinate side_b, Coordinate corner) {}
+
+int64_t CountCorners(const Map& map, VisitedMap& visited, Coordinate c) {
+  // Types of corners:
+  // There are three things worth checking.
+  // These two:
+  //
+  // OOOOO
+  // OOXOO
+  // OOAXO
+  //
+  // If neither of these are 'A', this is a corner.
+  // If one is an 'A', this might be a corner - check the diagonal:
+  //   - If it is an 'A', this IS a corner.
+  // If two of them are 'A', this is not a corner.
+  // Only count them if these are _not_ visited.
+  int64_t count = 0;
+  char character = map.GetChar(c);
+  count += CountCorner(map, visited, character, GoUp(c), GoRight(c),
+                       GoUp(GoRight(c)));
+  count += CountCorner(map, visited, character, GoRight(c), GoDown(c),
+                       GoRight(GoDown(c)));
+  count += CountCorner(map, visited, character, GoDown(c), GoLeft(c),
+                       GoDown(GoLeft(c)));
+  count +=
+      CountCorner(map, visited, character, GoLeft(c), GoUp(c), GoLeft(GoUp(c)));
+
+  return 0;
+}
 
 void ComputeRegion(const Map& map, VisitedMap& visited, Region& region,
                    char region_char, Coordinate current) {
@@ -156,6 +190,8 @@ void ComputeRegion(const Map& map, VisitedMap& visited, Region& region,
   region.area++;
   visited.MarkVisited(current);
 
+  region.sides += CountCorners(map, visited, current);
+
   ComputeRegion(map, visited, region, region_char, GoUp(current));
   ComputeRegion(map, visited, region, region_char, GoRight(current));
   ComputeRegion(map, visited, region, region_char, GoLeft(current));
@@ -164,11 +200,26 @@ void ComputeRegion(const Map& map, VisitedMap& visited, Region& region,
   return;
 }
 
+struct Edge {
+  Coordinate c{};
+  Direction direction;
+};
+
+int64_t ComputeSideLength(const Map& map, Coordinate start) {
+  // Find an edge.
+  Edge edge{.c = start};
+  return 0;
+
+  //  FindEdges(map, start);
+}
+
 int64_t RegionPrice(const Map& map, VisitedMap& visited, Coordinate start) {
   // If visited, return 0.
   if (visited.IsVisited(start)) {
     return 0;
   }
+
+  int64_t sides = ComputeSideLength(map, start);
 
   // This is an uncomputed region. Compute it.
   char region_char = map.GetChar(start);

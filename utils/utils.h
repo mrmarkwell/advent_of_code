@@ -11,6 +11,13 @@
 
 namespace aoc {
 
+enum class Direction {
+  kUp,
+  kDown,
+  kLeft,
+  kRight,
+};
+
 // Quick macro to print a variable when debugging.
 // Usage: PRINT(foo);
 #define PRINT(var) std::print(#var ": {}\n", var)
