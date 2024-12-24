@@ -152,7 +152,9 @@ class Map {
 
   char GetChar(Coordinate c) const { return map_[c.row][c.col]; }
   void SetChar(Coordinate c, char val) { map_[c.row][c.col] = val; }
-  bool CharEquals(Coordinate c, char val) { return map_[c.row][c.col] == val; }
+  bool CharEquals(Coordinate c, char val) const {
+    return !IsOutOfBounds(c) && map_[c.row][c.col] == val;
+  }
   // Only do this if the char is an int64_t.
   int64_t GetInt(Coordinate c) const {
     return ::aoc::ConvertCharToInt(GetChar(c));

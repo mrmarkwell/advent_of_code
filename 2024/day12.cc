@@ -139,7 +139,34 @@ struct Region {
 
 // Implement the algorithm described in the comment below.
 int64_t CountCorner(const Map& map, VisitedMap& visited, char character,
-                    Coordinate side_a, Coordinate side_b, Coordinate corner) {}
+                    Coordinate side_a, Coordinate side_b, Coordinate diagonal) {
+  bool a_in_region = map.CharEquals(side_a, character);
+  bool b_in_region = map.CharEquals(side_b, character);
+  bool a_visited = visited.IsVisited(side_a);
+  bool b_visited = visited.IsVisited(side_b);
+  if ((a_in_region && a_visited) || (b_in_region && b_visited)) {
+    // Don't double count if we've counted one of the sides already.
+    return 0;
+  }
+
+  bool c_in_region = map.CharEquals(diagonal, character);
+
+  if (!a_in_region && !b_in_region) {
+    // If neither sides match, this is a corner.
+    return 1;
+  } else if ((a_in_region && !b_in_region) || (b_in_region && !a_in_region)) {
+    if (c_in_region) {
+      // Only one side matches, and so does the diagonal.
+      return 1;
+    }
+  } else if (a_in_region && b_in_region) {
+    if (!c_in_region) {
+      // Both sides match, but the diagonal doesn't - this is also a corner.
+      return 1;
+    }
+  }
+  return 0;
+}
 
 int64_t CountCorners(const Map& map, VisitedMap& visited, Coordinate c) {
   // Types of corners:
@@ -166,7 +193,9 @@ int64_t CountCorners(const Map& map, VisitedMap& visited, Coordinate c) {
   count +=
       CountCorner(map, visited, character, GoLeft(c), GoUp(c), GoLeft(GoUp(c)));
 
-  return 0;
+  std::print("Counted {} corners at coordinate {}.\n", count, c.ToString());
+
+  return count;
 }
 
 void ComputeRegion(const Map& map, VisitedMap& visited, Region& region,
@@ -192,6 +221,9 @@ void ComputeRegion(const Map& map, VisitedMap& visited, Region& region,
 
   region.sides += CountCorners(map, visited, current);
 
+  // std::print("Counted {} corners so far at {}\n", region.sides,
+  //            current.ToString());
+
   ComputeRegion(map, visited, region, region_char, GoUp(current));
   ComputeRegion(map, visited, region, region_char, GoRight(current));
   ComputeRegion(map, visited, region, region_char, GoLeft(current));
@@ -200,36 +232,40 @@ void ComputeRegion(const Map& map, VisitedMap& visited, Region& region,
   return;
 }
 
-struct Edge {
-  Coordinate c{};
-  Direction direction;
+struct Price {
+  int64_t price{0};
+  int64_t bulk{0};
+
+  Price operator+(const Price& other) const {
+    return {price + other.price, bulk + other.bulk};
+  };
+
+  // Addition assignment operator
+  Price& operator+=(const Price& other) {
+    price += other.price;
+    bulk += other.bulk;
+    return *this;
+  }
 };
 
-int64_t ComputeSideLength(const Map& map, Coordinate start) {
-  // Find an edge.
-  Edge edge{.c = start};
-  return 0;
-
-  //  FindEdges(map, start);
-}
-
-int64_t RegionPrice(const Map& map, VisitedMap& visited, Coordinate start) {
+Price RegionPrice(const Map& map, VisitedMap& visited, Coordinate start) {
   // If visited, return 0.
   if (visited.IsVisited(start)) {
-    return 0;
+    return {};
   }
-
-  int64_t sides = ComputeSideLength(map, start);
 
   // This is an uncomputed region. Compute it.
   char region_char = map.GetChar(start);
   Region region;
+
   ComputeRegion(map, visited, region, region_char, start);
 
-  std::print("Region {} starting at {} is {} area, {} perimeter\n", region_char,
-             start.ToString(), region.area, region.perimeter);
+  std::print("Region {} starting at {} is {} area, {} perimeter, {} sides.\n",
+             region_char, start.ToString(), region.area, region.perimeter,
+             region.sides);
 
-  return region.area * region.perimeter;
+  return {.price = region.area * region.perimeter,
+          .bulk = region.area * region.sides};
 }
 
 int main() {
@@ -238,7 +274,7 @@ int main() {
 
   VisitedMap visited(map.NumRows(), map.NumCols());
 
-  int64_t price{0};
+  Price price{};
   // Trails are a start and end position that are connected.
   for (int row = 0; row < map.NumRows(); ++row) {
     for (int col = 0; col < map.NumCols(); ++col) {
@@ -248,7 +284,7 @@ int main() {
   }
 
   // This info isn't even needed.
-  std::print("Price: {}\n", price);
+  std::print("Price: {}\nBulk Price: {}\n", price.price, price.bulk);
 
   return 0;
 }
