@@ -86,3 +86,14 @@ cc_binary(
         "@abseil-cpp//absl/log:check",
     ],
 )
+
+cc_binary(
+    name = "farkel",
+    srcs = ["farkel.cc"],
+    deps = [
+        "//utils",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/container:flat_hash_set",
+        "@abseil-cpp//absl/log:check",
+    ],
+)
